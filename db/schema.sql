@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS workoutplanner;
+
+USE workoutplanner;
+
 CREATE TABLE `Sessions` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`date` DATETIME NOT NULL,
@@ -21,7 +25,7 @@ CREATE TABLE `Sets` (
 CREATE TABLE `Microcycle` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`date` DATETIME NOT NULL,
-	`deload` BOOLEAN NOT NULL AUTO_INCREMENT,
+	`deload` BOOLEAN NOT NULL,
 	`mesocycle_id` int NOT NULL,
 	`phase_id` int NOT NULL,
 	`user_id` int NOT NULL,
@@ -39,13 +43,13 @@ CREATE TABLE `Mesocycle` (
 CREATE TABLE `Phase` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`date` DATETIME NOT NULL,
-	`user_id` DATETIME NOT NULL,
+	`user_id` int NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `Users` (
 	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
 	`weight` int(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
