@@ -18,7 +18,7 @@ CREATE TABLE `Sets` (
 	`load` int NOT NULL,
 	`reps` int NOT NULL,
 	`session_id` int NOT NULL,
-	`user_id` bigint NOT NULL,
+	`user_id` int NOT NULL,
 	PRIMARY KEY (`id`)
 );
 

@@ -1,19 +1,25 @@
+import { Expression } from "../node_modules/typescript/lib/typescript";
+
 const express = require('express');
+import {Request, Response} from 'express';
 const app = express();
-// import { sequelize } from '../db';
-// const db = require('../db');
+
+// const router = express.router();
+// const routes = require('./routes');
+
 const { findUser, getSessions } = require('../db/index.js');
-// db.sequelize.sync();
 
-
-const port = 3000
+const port = 3000;
 app.use(express.json());
 
-app.get('/', (req, res) => {
+// app.use('/users', routes);
+// app.use('/sessions', routes);
+
+app.get('/', (req : Request, res : Response) => {
   res.send('Hello omahhhh')
 })
 
-app.get('/users/:username', async (req, res) => {
+app.get('/users/:username', async (req : Request, res : Response) => {
   try {
     let data = await findUser(req.params.username);
     res.status(200).send(data);
@@ -22,7 +28,7 @@ app.get('/users/:username', async (req, res) => {
   }
 });
 
-app.get('/sessions/:username', async (req, res) => {
+app.get('/sessions/:username', async (req : Request, res : Response) => {
 
   try {
     const { limit, offset } = req.query;
@@ -33,6 +39,7 @@ app.get('/sessions/:username', async (req, res) => {
     res.status(500).send(err);
   }
 });
+
 
 app.listen(port, () => {
   console.log(`plannerAPI listening at http://localhost:${port}`)
