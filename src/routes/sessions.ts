@@ -1,20 +1,22 @@
 const express = require('express');
 import {Request, Response} from 'express';
-const { findUser, getSessions } = require('../../db/index.js');
+const { getSessions } = require('../../db/index.js');
 
 const router = express.Router();
 // router.use(express.json());
 
 router
   .get('/:username', async (req : Request, res : Response) => {
-    console.log('in username route')
+    console.log('in sessions route')
     try {
-      let data = await findUser(req.params.username);
+      const { limit, offset } = req.query;
+      // console.log(req.query);
+      let data = await getSessions(req.params.username, limit, offset);
       res.status(200).send(data);
     } catch(err) {
       res.status(500).send(err);
     }
-  })
+  });
 
   // async (req : Request, res : Response) => {
   //   try {

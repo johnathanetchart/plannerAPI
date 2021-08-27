@@ -1,16 +1,22 @@
-// const router = express.Router;
+// const users = require('./users');
+// // const sessions = require('./sessions');
 
-// router
-//   .get('/', (req,res) => {
-//     console.log('in get for user endpoint')
-//   })
+// // const router = express.Router;
 
-///not using this yet
+// // router
+// //   .get('/', (req,res) => {
+// //     console.log('in get for user endpoint')
+// //   })
 
-/*
-  a clean way:
-  have one file contain allllll the endpoints.
-  but
-  have other files (controller) which contain the callbacks used by those endpoints
-    these files essentially have the (req,res) => { } functionality
-*/
+// ///not using this yet
+
+// /*
+//   a clean way:
+//   have one file contain allllll the endpoints.
+//   but
+//   have other files (controller) which contain the callbacks used by those endpoints
+//     these files essentially have the (req,res) => { } functionality
+// */
+// module.exports = {
+//   users
+// }
