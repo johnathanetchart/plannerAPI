@@ -1,6 +1,6 @@
 const express = require('express');
 import {Request, Response} from 'express';
-const { getPhases } = require('../../db/index.js');
+const { getPhases, addPhase } = require('../../db/index.js');
 
 const router = express.Router();
 // router.use(express.json());
@@ -17,17 +17,17 @@ router
       res.status(500).send(err);
     }
   })
-  // .post('/:username', async (req : Request, res : Response) => {
-  //   console.log('adding a session for', req.params.username);
-  //   try {
-  //     // const { limit, offset } = req.query;
-  //     // console.log(req.query);
-  //     // let data = await getSessions(req.params.username, limit, offset);
-  //     // res.status(200).send(data);
-  //   } catch(err) {
-  //     res.status(500).send(err);
-  //   }
-  // })
+  .post('/:username', async (req : Request, res : Response) => {
+    console.log('adding a new phase for', req.params.username, req.body);
+    try {
+      const { limit, offset, phaseName } = req.query;
+      console.log(req.body);
+      let data = await addPhase(req.params.username, limit, offset, req.body.name, req.body.date);
+      res.status(200).send(data);
+    } catch(err) {
+      res.status(500).send(err);
+    }
+  })
 
   // async (req : Request, res : Response) => {
   //   try {

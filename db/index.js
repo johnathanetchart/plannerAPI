@@ -33,7 +33,7 @@ const findUser = (username) => {
 
 const getSessions = async (username, limit = 100, offset = 0) => {
   try {
-    let { id } = await findUser(username)
+    let { id } = await findUser(username);
     return new Promise(async (resolve, reject) => {
       const sessions = await models.Sessions.findAll({
         where: {
@@ -51,7 +51,7 @@ const getSessions = async (username, limit = 100, offset = 0) => {
 };
 const getPhases = async (username, limit = 100, offset = 0) => {
   try {
-    let { id } = await findUser(username)
+    let { id } = await findUser(username);
     return new Promise(async (resolve, reject) => {
       const phases = await models.Phase.findAll({
         where: {
@@ -65,7 +65,25 @@ const getPhases = async (username, limit = 100, offset = 0) => {
   } catch(err) {
     reject(err);
   }
-}
+};
+const addPhase = async (username, limit = 100, offset = 0, name = 'unnamed', date) => {
+  try {
+    let { id } = await findUser(username);
+    if(date === undefined) {
+      date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    }
+    return new Promise(async (resolve, reject) => {
+      const phase = await models.Phase.create({
+        date: date,
+        user_id: id,
+        name: name
+      })
+      resolve(phase);
+    })
+  } catch(err) {
+    reject(err);
+  }
+};
 
 let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format
 // //add a phase for user 1
@@ -98,5 +116,6 @@ let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date form
 module.exports = {
   findUser,
   getSessions,
-  getPhases
+  getPhases,
+  addPhase
 };
