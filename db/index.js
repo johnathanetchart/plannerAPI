@@ -49,17 +49,23 @@ const getSessions = async (username, limit = 100, offset = 0) => {
     reject(err);
   }
 };
-// const addSession = async
-/* Model:
-models.Sessions.create({
-  date: date,
-  microcycle_id: 1,
-  mesocycle_id: 1,
-  phase_id: 1,
-  user_id: 1,
-  name: "brolifts"
-})
-*/
+const getPhases = async (username, limit = 100, offset = 0) => {
+  try {
+    let { id } = await findUser(username)
+    return new Promise(async (resolve, reject) => {
+      const phases = await models.Phase.findAll({
+        where: {
+          user_id: id
+        },
+        limit: Number(limit),
+        offset: Number(offset)
+      })
+      resolve(phases);
+    })
+  } catch(err) {
+    reject(err);
+  }
+}
 
 let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format
 // //add a phase for user 1
@@ -91,5 +97,6 @@ let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date form
 
 module.exports = {
   findUser,
-  getSessions
+  getSessions,
+  getPhases
 };
