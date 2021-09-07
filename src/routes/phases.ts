@@ -1,6 +1,6 @@
 const express = require('express');
 import {Request, Response} from 'express';
-const { getPhases, addPhase } = require('../../db/index.js');
+const { getPhases, addPhase, updatePhase } = require('../../db/index.js');
 
 const router = express.Router();
 // router.use(express.json());
@@ -21,11 +21,22 @@ router
     console.log('adding a new phase for', req.params.username, req.body);
     try {
       const { name, date } = req.body;
-      console.log(req.body);
       let data = await addPhase(req.params.username, name, date);
-      res.status(200).send(data);
+      res.status(201).send(data);
     } catch(err) {
-      res.status(500).send(err);
+      res.status(400).send(err);
+    }
+  })
+  .put('/:id', async (req: Request, res: Response) => {
+    console.log('updating phase with id', req.params.id);
+
+    try {
+      console.log(req.body);
+      let data = await updatePhase(req.params.id, req.body);
+      res.status(202).send(data);
+    }
+    catch(err) {
+      res.status(304).send(err);
     }
   })
 

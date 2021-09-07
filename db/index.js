@@ -59,9 +59,9 @@ const getPhases = async (username, limit = 100, offset = 0) => {
         },
         limit: Number(limit),
         offset: Number(offset)
-      })
+      });
       resolve(phases);
-    })
+    });
   } catch(err) {
     reject(err);
   }
@@ -77,13 +77,37 @@ const addPhase = async (username, name = 'unnamed', date) => {
         date: date,
         user_id: id,
         name: name
-      })
+      });
       resolve(phase);
-    })
+    });
   } catch(err) {
     reject(err);
   }
 };
+
+const updatePhase = async (id, phase) => {
+  try {
+    const { name, date } = phase;
+    console.log('in try of updatephase')
+    console.log(name)
+    console.log(date)
+    return new Promise(async (resolve, reject) => {
+      const phase = await models.Phase.update(
+        {
+          name: name,
+          date: date
+        },
+        {
+          where: {
+            id: id
+          }
+        });
+      resolve(phase);
+    });
+  } catch(err) {
+    reject(err);
+  }
+}
 
 let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format
 // //add a phase for user 1
@@ -117,5 +141,6 @@ module.exports = {
   findUser,
   getSessions,
   getPhases,
-  addPhase
+  addPhase,
+  updatePhase
 };
