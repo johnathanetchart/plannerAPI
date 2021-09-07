@@ -1,4 +1,4 @@
-import { Expression } from "../node_modules/typescript/lib/typescript";
+// import { Expression } from "../node_modules/typescript/lib/typescript";
 
 const express = require('express');
 import {Request, Response} from 'express';
@@ -15,6 +15,10 @@ app.use(express.json());
 
 app.use('/users', userRoute);
 app.use('/sessions', sessionRoute);
+// app.use('/phases', phaseRoute);
+// app.use('/mesocycles', mesocycleRoute);
+// app.use('/microcycles', microcycleRoute);
+
 
 app.get('/', (req : Request, res : Response) => {
   res.send('Hello omahhhh')

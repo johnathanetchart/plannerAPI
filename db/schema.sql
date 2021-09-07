@@ -44,6 +44,7 @@ CREATE TABLE `Phase` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`date` DATETIME NOT NULL,
 	`user_id` int NOT NULL,
+	`name` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 

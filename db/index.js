@@ -48,8 +48,20 @@ const getSessions = async (username, limit = 100, offset = 0) => {
   } catch(err) {
     reject(err);
   }
-}
-let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+};
+// const addSession = async
+/* Model:
+models.Sessions.create({
+  date: date,
+  microcycle_id: 1,
+  mesocycle_id: 1,
+  phase_id: 1,
+  user_id: 1,
+  name: "brolifts"
+})
+*/
+
+let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format
 // //add a phase for user 1
 // models.Phase.create({
 //   date: date,
