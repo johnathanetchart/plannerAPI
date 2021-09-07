@@ -8,7 +8,8 @@ It utilizes a MYSQL database.
 ## Endpoints
 
 ### /users
-  GET /users:username
+  GET
+  /users:username
     returns user in the form:
       {
         id,
@@ -16,7 +17,8 @@ It utilizes a MYSQL database.
         weight
       }
 
-  POST /users:username
+  POST
+  /users:username
     NOT IMPLEMENTED
     will create a new user.
     must include weight in body
@@ -25,7 +27,8 @@ It utilizes a MYSQL database.
       }
 
 ### /sessions
-  GET /sessions/:username
+  GET
+  /sessions/:username
     returns sessions of username
     optional query parameters are:
       {
@@ -33,7 +36,8 @@ It utilizes a MYSQL database.
         'offset' //default value 0
       }
 
-  POST /sessions/:username
+  POST
+  /sessions/:username
     NOT IMPLEMENTED
     will create a new session.
     must include in body:
@@ -50,7 +54,8 @@ It utilizes a MYSQL database.
       //TODO
 
 ### /phases
-  GET /phases/:username
+  GET
+  /phases/:username
     returns phases of username
     optional parameters are:
       {
@@ -70,6 +75,7 @@ It utilizes a MYSQL database.
       ]
 
   POST
+  /phases/:username
     creates a new phase for username
     optional body parameters are:
       {
