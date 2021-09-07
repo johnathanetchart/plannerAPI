@@ -66,7 +66,7 @@ const getPhases = async (username, limit = 100, offset = 0) => {
     reject(err);
   }
 };
-const addPhase = async (username, limit = 100, offset = 0, name = 'unnamed', date) => {
+const addPhase = async (username, name = 'unnamed', date) => {
   try {
     let { id } = await findUser(username);
     if(date === undefined) {

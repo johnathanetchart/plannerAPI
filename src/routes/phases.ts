@@ -20,9 +20,9 @@ router
   .post('/:username', async (req : Request, res : Response) => {
     console.log('adding a new phase for', req.params.username, req.body);
     try {
-      const { limit, offset, phaseName } = req.query;
+      const { name, date } = req.body;
       console.log(req.body);
-      let data = await addPhase(req.params.username, limit, offset, req.body.name, req.body.date);
+      let data = await addPhase(req.params.username, name, date);
       res.status(200).send(data);
     } catch(err) {
       res.status(500).send(err);
