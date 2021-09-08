@@ -67,22 +67,22 @@ const getPhases = async (username, limit = 100, offset = 0) => {
   }
 };
 const addPhase = async (username, name = 'unnamed', date) => {
-  try {
-    let { id } = await findUser(username);
-    if(date === undefined) {
-      date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    }
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await findUser(username);
+      if(date === undefined) {
+        date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      }
       const phase = await models.Phase.create({
         date: date,
         user_id: id,
         name: name
       });
       resolve(phase);
-    });
-  } catch(err) {
-    reject(err);
-  }
+    } catch(err) {
+      reject(err);
+    }
+  });
 };
 
 const updatePhase = async (id, phase) => {

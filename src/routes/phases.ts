@@ -30,7 +30,8 @@ router
     console.log('updating phase with id', req.params.id);
     try {
       let data = await updatePhase(req.params.id, req.body);
-      res.status(202).send(data);
+      //add findOne to return updated phase
+      res.status(200).send(data);
     }
     catch(err) {
       res.status(304).send(err);

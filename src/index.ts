@@ -11,11 +11,11 @@ const phaseRoute = require('./routes/phases');
 
 const { findUser, getSessions } = require('../db/index.js');
 
-const port = 3000;
+const port = 7000;
 app.use(express.json());
 
-app.use('/users', userRoute);
-app.use('/sessions', sessionRoute);
+app.use('/users', userRoute); // POST new user, PUT update user
+app.use('/sessions', sessionRoute); //include sets - just update the whole session
 app.use('/phases', phaseRoute);
 // app.use('/mesocycles', mesocycleRoute);
 // app.use('/microcycles', microcycleRoute);
