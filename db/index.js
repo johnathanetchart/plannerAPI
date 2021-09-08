@@ -1,10 +1,9 @@
-
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize("workoutplanner", "root", "banana", {
-  host: "localhost",
-  dialect: "mysql"
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('workoutplanner', 'root', 'banana', {
+  host: 'localhost',
+  dialect: 'mysql',
 });
-var initModels = require("../models/init-models");
+var initModels = require('../models/init-models');
 var models = initModels(sequelize);
 // console.log(models);
 
@@ -17,96 +16,98 @@ db.sequelize = sequelize;
 
 const findUser = (username) => {
   return new Promise((resolve, reject) => {
-      models.Users.findOne({
+    //try to change to async later
+    models.Users.findOne({
       where: {
-        name: username
-      }
+        name: username,
+      },
     })
       .then((data) => {
         resolve(data);
       })
       .catch((err) => {
         reject(err);
-      })
-  })
-}
+      });
+  });
+};
 
 const getSessions = async (username, limit = 100, offset = 0) => {
-  try {
-    let { id } = await findUser(username);
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await findUser(username);
       const sessions = await models.Sessions.findAll({
         where: {
-          user_id: id
+          user_id: id,
         },
         limit: Number(limit),
-        offset: Number(offset)
-      })
+        offset: Number(offset),
+      });
 
       resolve(sessions);
-    })
-  } catch(err) {
-    reject(err);
-  }
+    } catch (err) {
+      reject(err);
+    }
+  });
 };
 const getPhases = async (username, limit = 100, offset = 0) => {
-  try {
-    let { id } = await findUser(username);
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await findUser(username);
       const phases = await models.Phase.findAll({
         where: {
-          user_id: id
+          user_id: id,
         },
         limit: Number(limit),
-        offset: Number(offset)
+        offset: Number(offset),
       });
       resolve(phases);
-    });
-  } catch(err) {
-    reject(err);
-  }
+    } catch (err) {
+      reject(err);
+    }
+  });
 };
 const addPhase = async (username, name = 'unnamed', date) => {
   return new Promise(async (resolve, reject) => {
     try {
       let { id } = await findUser(username);
-      if(date === undefined) {
+      if (date === undefined) {
         date = new Date().toISOString().slice(0, 19).replace('T', ' ');
       }
       const phase = await models.Phase.create({
         date: date,
         user_id: id,
-        name: name
+        name: name,
       });
       resolve(phase);
-    } catch(err) {
+    } catch (err) {
       reject(err);
     }
   });
 };
 
 const updatePhase = async (id, phase) => {
-  try {
-    const { name, date } = phase;
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { name, date } = phase;
       const phase = await models.Phase.update(
         {
           name: name,
-          date: date
+          date: date,
         },
         {
           where: {
-            id: id
-          }
-        });
+            id: id,
+          },
+        }
+      );
       resolve(phase);
-    });
-  } catch(err) {
-    reject(err);
-  }
-}
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
 
-let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format
+// let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format
 // //add a phase for user 1
 // models.Phase.create({
 //   date: date,
@@ -139,5 +140,5 @@ module.exports = {
   getSessions,
   getPhases,
   addPhase,
-  updatePhase
+  updatePhase,
 };

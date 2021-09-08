@@ -1,7 +1,7 @@
 // import { Expression } from "../node_modules/typescript/lib/typescript";
 
 const express = require('express');
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 const app = express();
 
 // const router = express.router();
@@ -9,7 +9,7 @@ const userRoute = require('./routes/users');
 const sessionRoute = require('./routes/sessions');
 const phaseRoute = require('./routes/phases');
 
-const { findUser, getSessions } = require('../db/index.js');
+// const { findUser, getSessions } = require('../db/index.js');
 
 const port = 7000;
 app.use(express.json());
@@ -20,10 +20,9 @@ app.use('/phases', phaseRoute);
 // app.use('/mesocycles', mesocycleRoute);
 // app.use('/microcycles', microcycleRoute);
 
-
-app.get('/', (req : Request, res : Response) => {
-  res.send('Hello omahhhh')
-})
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello omahhhh');
+});
 
 // app.get('/users/:username', async (req : Request, res : Response) => {
 //   try {
@@ -46,7 +45,6 @@ app.get('/', (req : Request, res : Response) => {
 //   }
 // });
 
-
 app.listen(port, () => {
-  console.log(`plannerAPI listening at http://localhost:${port}`)
+  console.log(`plannerAPI listening at http://localhost:${port}`);
 });
