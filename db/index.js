@@ -88,9 +88,6 @@ const addPhase = async (username, name = 'unnamed', date) => {
 const updatePhase = async (id, phase) => {
   try {
     const { name, date } = phase;
-    console.log('in try of updatephase')
-    console.log(name)
-    console.log(date)
     return new Promise(async (resolve, reject) => {
       const phase = await models.Phase.update(
         {

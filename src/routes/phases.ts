@@ -10,7 +10,6 @@ router
     console.log('getting all sessions for', req.params.username);
     try {
       const { limit, offset } = req.query;
-      // console.log(req.query);
       let data = await getPhases(req.params.username, limit, offset);
       res.status(200).send(data);
     } catch(err) {
@@ -29,9 +28,7 @@ router
   })
   .put('/:id', async (req: Request, res: Response) => {
     console.log('updating phase with id', req.params.id);
-
     try {
-      console.log(req.body);
       let data = await updatePhase(req.params.id, req.body);
       res.status(202).send(data);
     }
