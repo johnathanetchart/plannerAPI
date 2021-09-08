@@ -1,6 +1,6 @@
 const express = require('express');
 import { Request, Response } from 'express';
-const { findUser, createUser } = require('../../db/index.js');
+const { findUser, createUser, updateUser } = require('../../db/index.js');
 
 const router = express.Router();
 // router.use(express.json());
@@ -22,6 +22,19 @@ router.post('/', async (req: Request, res: Response) => {
     res.status(201).send(data);
   } catch (err) {
     res.status(409).send(err);
+  }
+});
+
+router.put('/:username', async (req: Request, res: Response) => {
+  const { username } = req.params;
+  console.log(username);
+  const { newUsername, newWeight } = req.body;
+  console.log('in PUT for users');
+  try {
+    const data = await updateUser(username, newUsername, newWeight);
+    res.status(200).send(data);
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 // async (req : Request, res : Response) => {

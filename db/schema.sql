@@ -44,13 +44,13 @@ CREATE TABLE `Phase` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`date` DATETIME NOT NULL,
 	`user_id` int NOT NULL,
-	`name` varchar(255) NOT NULL,
+	`name` varchar(255) NOT NULL UNIQUE,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `Users` (
 	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
+	`name` varchar(255) NOT NULL UNIQUE,
 	`weight` int(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );

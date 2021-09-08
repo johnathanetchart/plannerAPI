@@ -14,7 +14,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-const findUser = (username) => {
+const findUser = async (username) => {
   return new Promise((resolve, reject) => {
     //try to change to async later
     try {
@@ -30,16 +30,16 @@ const findUser = (username) => {
   });
 };
 
-const createUser = (name, weight) => {
-  console.log('name', name, 'weight', weight);
+const createUser = async (username, weight) => {
+  console.log('name', username, 'weight', weight);
   return new Promise(async (resolve, reject) => {
     try {
-      let existingUser = await findUser(name);
+      let existingUser = await findUser(username);
       if (existingUser) {
         reject('user exists');
       }
       const newUser = await models.Users.create({
-        name: name,
+        name: username,
         weight: Number(weight) || 0,
       });
       resolve(newUser);
@@ -49,24 +49,44 @@ const createUser = (name, weight) => {
   });
 };
 
-const getSessions = async (username, limit = 100, offset = 0) => {
+const updateUser = async (username, newUsername, newWeight) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let { id } = await findUser(username);
-      const sessions = await models.Sessions.findAll({
-        where: {
-          user_id: id,
+      const { id } = await findUser(username);
+      const changeUser = await models.Users.update(
+        {
+          name: newUsername,
+          weight: newWeight,
         },
-        limit: Number(limit),
-        offset: Number(offset),
-      });
-
-      resolve(sessions);
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+      const updatedUser = await findUser(newUsername || username);
+      resolve(updatedUser);
     } catch (err) {
       reject(err);
     }
   });
 };
+
+const findPhase = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const phase = models.Phase.findOne({
+        where: {
+          id: Number(id),
+        },
+      });
+      resolve(phase);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 const getPhases = async (username, limit = 100, offset = 0) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -103,22 +123,42 @@ const addPhase = async (username, name = 'unnamed', date) => {
   });
 };
 
-const updatePhase = async (id, phase) => {
+const updatePhase = async (id, newName, newDate) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { name, date } = phase;
+      // const { name, date } = phaseUpdates;
       const phase = await models.Phase.update(
         {
-          name: name,
-          date: date,
+          name: newName,
+          date: newDate, //if newDate isn't in the correct format, it still runs but won't update that field
         },
         {
           where: {
-            id: id,
+            id: Number(id),
           },
         }
       );
+      // const updatedPhase = await findPhase(id);
+      // console.log(updatedPhase);
       resolve(phase);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+const getSessions = async (username, limit = 100, offset = 0) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await findUser(username);
+      const sessions = await models.Sessions.findAll({
+        where: {
+          user_id: id,
+        },
+        limit: Number(limit),
+        offset: Number(offset),
+      });
+
+      resolve(sessions);
     } catch (err) {
       reject(err);
     }
@@ -155,9 +195,11 @@ const updatePhase = async (id, phase) => {
 
 module.exports = {
   findUser,
-  getSessions,
+  createUser,
+  updateUser,
+  findPhase,
   getPhases,
   addPhase,
   updatePhase,
-  createUser,
+  getSessions,
 };

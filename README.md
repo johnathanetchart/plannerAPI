@@ -105,11 +105,10 @@ PUT
 /phases/:id
 updates the phase row in the database for the supplied phase id with req.body in the form of
 {
-name, //OPTIONAL - new name
-date //OPTIONAL - new date
+newName, //OPTIONAL - new name
+newDate //OPTIONAL - new date
 }
-returns "1" if change is accepted
-returns "0" if change is not accepted
+returns updated phase on success
 
 ### /mesocycles
 
