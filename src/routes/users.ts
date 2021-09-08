@@ -1,12 +1,12 @@
 const express = require('express');
 import { Request, Response } from 'express';
-const { findUser, getSessions } = require('../../db/index.js');
+const { findUser, createUser } = require('../../db/index.js');
 
 const router = express.Router();
 // router.use(express.json());
 
 router.get('/:username', async (req: Request, res: Response) => {
-  console.log('in username route');
+  console.log('in users GET route');
   try {
     let data = await findUser(req.params.username);
     res.status(200).send(data);
@@ -15,6 +15,15 @@ router.get('/:username', async (req: Request, res: Response) => {
   }
 });
 
+router.post('/', async (req: Request, res: Response) => {
+  console.log('in users POST route');
+  try {
+    let data = await createUser(req.body.name, req.body.weight);
+    res.status(201).send(data);
+  } catch (err) {
+    res.status(409).send(err);
+  }
+});
 // async (req : Request, res : Response) => {
 //   try {
 //     let data = await findUser(req.params.username);

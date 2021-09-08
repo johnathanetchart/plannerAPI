@@ -30,6 +30,25 @@ const findUser = (username) => {
   });
 };
 
+const createUser = (name, weight) => {
+  console.log('name', name, 'weight', weight);
+  return new Promise(async (resolve, reject) => {
+    try {
+      let existingUser = await findUser(name);
+      if (existingUser) {
+        reject('user exists');
+      }
+      const newUser = await models.Users.create({
+        name: name,
+        weight: Number(weight) || 0,
+      });
+      resolve(newUser);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 const getSessions = async (username, limit = 100, offset = 0) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -140,4 +159,5 @@ module.exports = {
   getPhases,
   addPhase,
   updatePhase,
+  createUser,
 };

@@ -22,10 +22,17 @@ weight
 POST
 /users:username
 NOT IMPLEMENTED
-will create a new user.
-must include weight in body
+will create a new user
+send in body:
 {
-"weight": Number // can perhaps default to 0
+"name": String
+"weight": Number // will default to 0 if not supplied
+}
+returns new user object including new id
+{
+id,
+name,
+weight
 }
 
 ### /sessions
