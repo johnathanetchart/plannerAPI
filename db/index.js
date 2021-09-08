@@ -17,17 +17,16 @@ db.sequelize = sequelize;
 const findUser = (username) => {
   return new Promise((resolve, reject) => {
     //try to change to async later
-    models.Users.findOne({
-      where: {
-        name: username,
-      },
-    })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
+    try {
+      const user = models.Users.findOne({
+        where: {
+          name: username,
+        },
       });
+      resolve(user);
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 

@@ -10,7 +10,7 @@ router
     console.log('getting all sessions for', req.params.username);
     try {
       const { limit, offset } = req.query;
-        let data = await getPhases(req.params.username, limit, offset);
+      let data = await getPhases(req.params.username, limit, offset);
       res.status(200).send(data);
     } catch (err) {
       res.status(500).send(err);
