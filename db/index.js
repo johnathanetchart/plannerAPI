@@ -1,3 +1,4 @@
+// const { resolve } = require('path/posix');
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('workoutplanner', 'root', 'banana', {
   host: 'localhost',
@@ -146,6 +147,92 @@ const updatePhase = async (id, newName, newDate) => {
     }
   });
 };
+
+const findMesocycle = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const mesocycle = await models.Mesocycle.findOne({
+        where: {
+          id: id,
+        },
+      });
+      resolve(mesocycle);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const getMesocycles = async (username, limit = 100, offset = 0) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await findUser(username);
+      const mesocycles = await models.Mesocycle.findAll({
+        where: {
+          user_id: id,
+        },
+        limit: Number(limit),
+        offset: Number(offset),
+      });
+      resolve(mesocycles);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const addMesocycle = async (username, date, phaseId, userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (userId === undefined) {
+        let { id } = await findUser(username);
+        userId = id;
+      }
+      if (date === undefined) {
+        date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      }
+
+      console.log(username);
+      console.log(date);
+      console.log(phaseId);
+      console.log(userId);
+
+      const mesocycle = await models.Mesocycle.create({
+        date: date,
+        phase_id: phaseId,
+        user_id: userId,
+      });
+      resolve(mesocycle);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const updateMesocycle = async (mesocycleId, newDate, newPhaseId, newUserId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const mesocycle = await models.Mesocycle.update(
+        {
+          date: newDate, //if newDate isn't in the correct format, it still runs but won't update that field
+          phase_id: newPhaseId,
+          user_id: newUserId,
+        },
+        {
+          where: {
+            id: Number(mesocycleId),
+          },
+        }
+      );
+      // const updatedPhase = await findPhase(id);
+      // console.log(updatedPhase);
+      resolve(mesocycle);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 const getSessions = async (username, limit = 100, offset = 0) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -201,5 +288,9 @@ module.exports = {
   getPhases,
   addPhase,
   updatePhase,
+  findMesocycle,
+  getMesocycles,
+  addMesocycle,
+  updateMesocycle,
   getSessions,
 };

@@ -42,8 +42,8 @@ GET
 returns sessions of username
 optional query parameters are:
 {
-'limit', //default value 100
-'offset' //default value 0
+limit, //default value 100
+offset, //default value 0
 }
 
 POST
@@ -52,12 +52,12 @@ NOT IMPLEMENTED
 will create a new session.
 must include in body:
 {
-`date` DATETIME NOT NULL, //default to current time if not supplied
-`name` varchar(255) NOT NULL,
-`phase_id` int NOT NULL,
-`mesocycle_id` int NOT NULL,
-`microcycle_id` int NOT NULL,
-`user_id` int NOT NULL, //will probably use username instead
+date, //default to current time if not supplied
+name,
+phase_id,
+mesocycle_id,
+microcycle_id,
+user_id, //optional, but queries one less //// TODO MAKE OPTIONAL
 }
 
     returns in the form of:
@@ -70,17 +70,17 @@ GET
 returns phases of username
 optional parameters are:
 {
-'limit', //default value 100
-'offset' //default value 0
+limit, //default value 100
+offset //default value 0
 }
 
     returns in the form of:
       [
           {
-              "id",
-              "date",
-              "user_id",
-              "name"
+              id,
+              date,
+              user_id,
+              name
           },
           ...
       ]
@@ -90,29 +90,99 @@ POST
 creates a new phase for username
 optional body parameters are:
 {
-'date', //defaults to current time
+date, //defaults to current time
 }
 
     returns in the form of:
       {
-        "id", //phase's id
-        "date",
-        "user_id",
-        "name"
+        id, //phase's id
+        date,
+        user_id,
+        name
       }
 
 PUT
 /phases/:id
-updates the phase row in the database for the supplied phase id with req.body in the form of
+updates the phase row in the database for the supplied phase id with req.body in the form:
 {
 newName, //OPTIONAL - new name
-newDate //OPTIONAL - new date
+newDate //OPTIONAL - new date //will count as success with no change if improper format
 }
+if newName or newDate are not present in body, it will return "No changed requested."
 returns updated phase on success
+{
+id,
+name,
+date
+}
 
 ### /mesocycles
 
-//TODO
+GET
+/mesocycles/:username/:mesocycleId
+Retrieves the specific mesocycle information for a designated mesocycleId
+returns mesocycle:
+{
+id,
+date,
+phase_id,
+user_id,
+}
+
+GET
+/mesocycles/:username
+Retrieves a list of mesocycles for the designated user.
+optional parameters are:
+{
+limit, //default value 100
+offset //default value 0
+}
+
+Returns a list of the user's mesocycles:
+[
+{
+id,
+date,
+phase_id,
+user_id,
+},
+...
+]
+
+POST
+/mesocycles/:username
+Creates a new mesocycle entry for the user.
+Parameters include:
+{
+date, //optional: defaults to current time
+phaseId, //REQUIRED
+userId, //optional but reduces database queries
+}
+
+Returns the created mesocycle:
+{
+id,
+date,
+phase_id,
+user_id,
+}
+
+PUT
+/mesocycles/:username/:mesocycleId
+Updates the mesocycle table row in the database for the supplied mesocycle id with req.body in the form:
+{
+newDate, //OPTIONAL - new date //will count as success with no change if improper format
+newPhaseId,
+newUserId,
+}
+if newDate, newPhaseId, and newUserId are not present in body, it will return "No changed requested."
+returns updated mesocycle on success:
+{
+id,
+date,
+phase_id,
+user_id,
+}
 
 ### /microcycles
 

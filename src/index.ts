@@ -8,6 +8,7 @@ const app = express();
 const userRoute = require('./routes/users');
 const sessionRoute = require('./routes/sessions');
 const phaseRoute = require('./routes/phases');
+const mesocycleRoute = require('./routes/mesocycles');
 
 // const { findUser, getSessions } = require('../db/index.js');
 
@@ -17,7 +18,7 @@ app.use(express.json());
 app.use('/users', userRoute); // POST new user, PUT update user
 app.use('/sessions', sessionRoute); //include sets - just update the whole session
 app.use('/phases', phaseRoute);
-// app.use('/mesocycles', mesocycleRoute);
+app.use('/mesocycles', mesocycleRoute);
 // app.use('/microcycles', microcycleRoute);
 
 app.get('/', (req: Request, res: Response) => {

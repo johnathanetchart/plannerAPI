@@ -8,7 +8,6 @@ const {
 } = require('../../db/index.js');
 
 const router = express.Router();
-// router.use(express.json());
 
 router
   .get('/:username', async (req: Request, res: Response) => {
@@ -41,7 +40,6 @@ router
     console.log('updating phase with id', id);
     try {
       const data = await updatePhase(id, newName, newDate);
-      //add findOne to return updated phase
       const updatedPhase = await findPhase(id);
       res.status(200).send(updatedPhase);
     } catch (err) {
@@ -49,26 +47,4 @@ router
     }
   });
 
-// async (req : Request, res : Response) => {
-//   try {
-//     let data = await findUser(req.params.username);
-//     res.status(200).send(data);
-//   } catch(err) {
-//     res.status(500).send(err);
-//   }
-// })
-
-// .post()
-
 module.exports = router;
-
-/*
-app.get('/users/:username', async (req : Request, res : Response) => {
-  try {
-    let data = await findUser(req.params.username);
-    res.status(200).send(data);
-  } catch(err) {
-    res.status(500).send(err);
-  }
-});
-*/
