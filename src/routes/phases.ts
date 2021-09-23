@@ -30,17 +30,19 @@ router
       res.status(400).send(err);
     }
   })
-  .put('/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { newName, newDate } = req.body;
+  .put('/:phaseId', async (req: Request, res: Response) => {
+    //TODO refactor to accept full object only
+    const { phaseId } = req.params;
+    const { newPhase, newName, newDate } = req.body;
     if (!(newName || newDate)) {
+      //check that newPhase object has all required details
       res.status(400).send('No changes requested.');
       return;
     }
-    console.log('updating phase with id', id);
+    console.log('updating phase with id', phaseId);
     try {
-      const data = await updatePhase(id, newName, newDate);
-      const updatedPhase = await findPhase(id);
+      const data = await updatePhase(phaseId, newName, newDate);
+      const updatedPhase = await findPhase(phaseId);
       res.status(200).send(updatedPhase);
     } catch (err) {
       res.status(304).send(err);

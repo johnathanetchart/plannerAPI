@@ -16,16 +16,18 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 const findUser = async (username) => {
-  return new Promise((resolve, reject) => {
-    //try to change to async later
+  return new Promise(async (resolve, reject) => {
+    console.log('attempting to find user with name', username);
     try {
-      const user = models.Users.findOne({
+      const user = await models.Users.findOne({
         where: {
           name: username,
         },
       });
+      console.log(user);
       resolve(user);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -45,6 +47,7 @@ const createUser = async (username, weight) => {
       });
       resolve(newUser);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -68,6 +71,7 @@ const updateUser = async (username, newUsername, newWeight) => {
       const updatedUser = await findUser(newUsername || username);
       resolve(updatedUser);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -83,6 +87,7 @@ const findPhase = async (id) => {
       });
       resolve(phase);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -101,6 +106,7 @@ const getPhases = async (username, limit = 100, offset = 0) => {
       });
       resolve(phases);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -119,6 +125,7 @@ const addPhase = async (username, name = 'unnamed', date) => {
       });
       resolve(phase);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -143,6 +150,7 @@ const updatePhase = async (id, newName, newDate) => {
       // console.log(updatedPhase);
       resolve(phase);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -158,6 +166,7 @@ const findMesocycle = async (id) => {
       });
       resolve(mesocycle);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -176,6 +185,7 @@ const getMesocycles = async (username, limit = 100, offset = 0) => {
       });
       resolve(mesocycles);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -204,6 +214,7 @@ const addMesocycle = async (username, date, phaseId, userId) => {
       });
       resolve(mesocycle);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -228,6 +239,99 @@ const updateMesocycle = async (mesocycleId, newDate, newPhaseId, newUserId) => {
       // console.log(updatedPhase);
       resolve(mesocycle);
     } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const findMicrocycle = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const microcycle = await models.Microcycle.findOne({
+        where: {
+          id: id,
+        },
+      });
+      resolve(microcycle);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const getMicrocycles = async (username, limit = 100, offset = 0) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { id } = await findUser(username);
+      const microcycles = await models.Microcycle.findAll({
+        where: {
+          user_id: id,
+        },
+        limit: Number(limit),
+        offset: Number(offset),
+      });
+      resolve(microcycles);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+const addMicrocycle = async (username, newMicrocycle) => {
+  let { date, deload, mesocycleId, phaseId, userId } = newMicrocycle;
+  console.log('trying to add a microcycle');
+  // console.log(newMicrocycle);
+  // console.log(username);
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (userId === undefined) {
+        let { id } = await findUser(username);
+        userId = id;
+      }
+      if (date === undefined) {
+        date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      }
+
+      const microcycle = await models.Microcycle.create({
+        date: date,
+        deload: deload,
+        mesocycle_id: mesocycleId,
+        phase_id: phaseId,
+        user_id: userId,
+      });
+      resolve(microcycle);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const updateMicrocycle = async (newMicrocycle) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { id, date, deload, mesocycleId, phaseId, userId } = newMicrocycle;
+      const microcycle = await models.Microcycle.update(
+        {
+          date: date, //if newDate isn't in the correct format, it still runs but won't update that field
+          deload: deload,
+          mesocycle_id: Number(mesocycleId),
+          phase_id: Number(phaseId),
+          user_id: Number(userId),
+        },
+        {
+          where: {
+            id: Number(id),
+          },
+        }
+      );
+      // const updatedPhase = await findPhase(id);
+      // console.log(updatedPhase);
+      resolve(microcycle);
+    } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -247,6 +351,7 @@ const getSessions = async (username, limit = 100, offset = 0) => {
 
       resolve(sessions);
     } catch (err) {
+      console.error(err);
       reject(err);
     }
   });
@@ -292,5 +397,9 @@ module.exports = {
   getMesocycles,
   addMesocycle,
   updateMesocycle,
+  findMicrocycle,
+  getMicrocycles,
+  addMicrocycle,
+  updateMicrocycle,
   getSessions,
 };

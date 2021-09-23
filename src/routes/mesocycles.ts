@@ -46,6 +46,7 @@ router
     }
   })
   .put('/:username/:mesocycleId', async (req: Request, res: Response) => {
+    //TODO refactor to accept only full object
     const { mesocycleId } = req.params;
     const { newDate, newPhaseId, newUserId } = req.body;
     if (!(newDate || newPhaseId || newUserId)) {

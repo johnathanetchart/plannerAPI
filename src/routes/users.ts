@@ -26,6 +26,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 router.put('/:username', async (req: Request, res: Response) => {
+  //TODO refactor to accept only full object
   const { username } = req.params;
   console.log(username);
   const { newUsername, newWeight } = req.body;

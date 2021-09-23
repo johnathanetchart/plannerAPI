@@ -102,7 +102,7 @@ date, //defaults to current time
       }
 
 PUT
-/phases/:id
+/phases/:phaseId
 updates the phase row in the database for the supplied phase id with req.body in the form:
 {
 newName, //OPTIONAL - new name
