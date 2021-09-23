@@ -24,7 +24,6 @@ const findUser = async (username) => {
           name: username,
         },
       });
-      console.log(user);
       resolve(user);
     } catch (err) {
       console.error(err);
@@ -304,28 +303,41 @@ const findMicrocycle = async (id) => {
 };
 
 const getMicrocycles = async (username, limit = 100, offset = 0) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let { id } = await findUser(username);
-      const microcycles = await models.Microcycle.findAll({
-        where: {
-          user_id: id,
-        },
-        limit: Number(limit),
-        offset: Number(offset),
-      });
-      resolve(microcycles);
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
+  if (username !== undefined) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let { id } = await findUser(username);
+        const microcycles = await models.Microcycle.findAll({
+          where: {
+            user_id: id,
+          },
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(microcycles);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  } else {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const microcycles = await models.Microcycle.findAll({
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(microcycles);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  }
 };
+
 const addMicrocycle = async (username, newMicrocycle) => {
   let { date, deload, mesocycle_id, phase_id, user_id } = newMicrocycle;
-  console.log('trying to add a microcycle');
-  // console.log(newMicrocycle);
-  // console.log(username);
   return new Promise(async (resolve, reject) => {
     try {
       if (userId === undefined) {
@@ -335,7 +347,6 @@ const addMicrocycle = async (username, newMicrocycle) => {
       if (date === undefined) {
         date = new Date().toISOString().slice(0, 19).replace('T', ' ');
       }
-
       const microcycle = await models.Microcycle.create({
         date: date,
         deload: deload,
@@ -370,8 +381,6 @@ const updateMicrocycle = async (newMicrocycle) => {
           },
         }
       );
-      // const updatedPhase = await findPhase(id);
-      // console.log(updatedPhase);
       resolve(microcycle);
     } catch (err) {
       console.error(err);

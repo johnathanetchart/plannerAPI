@@ -183,8 +183,8 @@ Parameters include:
 {
 newMesocycle: {
 date, //optional: defaults to current time
-phaseId, //REQUIRED
-userId, //OPTIONAL - but reduces database queries if included
+phase_id, //REQUIRED
+user_id, //OPTIONAL - but reduces database queries if included
 }
 }
 
@@ -232,15 +232,15 @@ user_id,
 }
 
 GET
-/microcycles/:username
-Returns a list of microcycles for the designated user.
+/microcycles/:username || /microcycles
+Returns a list of microcycles for the designated user or, if no username is present in req.params, returns a list of all microcycles.
 optional parameters are:
 {
 limit, //default value 100
 offset //default value 0
 }
 
-Returns a list of the user's microcycles:
+Returns a list of microcycles in the form:
 [
 {
 id,
@@ -261,9 +261,9 @@ Parameters include:
 newMicrocycle: {
 date, //optional: defaults to current time
 deload, //REQUIRED
-microcycleId, //REQUIRED
-phaseId, //REQUIRED
-userId, //optional but reduces database queries
+microcycle_id, //REQUIRED
+phase_id, //REQUIRED
+user_id, //optional but reduces database queries
 }
 }
 
@@ -285,13 +285,13 @@ updatedMicrocycle: {
 id,
 date,
 deload,
-mesocycleId,
-phaseId,
-userId
+mesocycle_id,
+phase_id,
+user_id
 }
 }
-if any of the properties of updatedMicrocycle are not present in body, it will return "Incomplete microcycle object received."
-returns updated microcycle on success:
+
+returns updated microcycle in the form:
 {
 id,
 date,
@@ -304,3 +304,5 @@ user_id,
 ### /sessions
 
 //TODO
+
+### /sets
