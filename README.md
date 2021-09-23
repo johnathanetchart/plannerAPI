@@ -186,7 +186,88 @@ user_id,
 
 ### /microcycles
 
-//TODO
+GET
+/microcycles/:username/:mesocycleId
+Retrieves the specific microcycle information for a designated microcycleId
+returns microcycle:
+{
+id,
+date,
+deload,
+mesocycle_id,
+phase_id,
+user_id,
+}
+
+GET
+/microcycles/:username
+Retrieves a list of microcycles for the designated user.
+optional parameters are:
+{
+limit, //default value 100
+offset //default value 0
+}
+
+Returns a list of the user's microcycles:
+[
+{
+id,
+date,
+deload,
+mesocycle_id,
+phase_id,
+user_id,
+},
+...
+]
+
+POST
+/microcycles/:username
+Creates a new microcycle entry for the user.
+Parameters include:
+{
+newMicrocycle: {
+date, //optional: defaults to current time
+deload, //REQUIRED
+microcycleId, //REQUIRED
+phaseId, //REQUIRED
+userId, //optional but reduces database queries
+}
+}
+
+Returns the created microcycle:
+{
+id,
+date,
+deload,
+mesocycle_id,
+phase_id,
+user_id,
+}
+
+PUT
+/microcycles/:username
+Updates the microcycle table row in the database for the supplied microcycle with req.body in the form:
+{
+updatedMicrocycle: {
+id,
+date,
+deload,
+mesocycleId,
+phaseId,
+userId
+}
+}
+if any of the properties of updatedMicrocycle are not present in body, it will return "Incomplete microcycle object received."
+returns updated microcycle on success:
+{
+id,
+date,
+deload,
+mesocycle_id,
+phase_id,
+user_id,
+}
 
 ### /sessions
 

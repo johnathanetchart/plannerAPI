@@ -33,19 +33,15 @@ const findUser = async (username) => {
   });
 };
 
-const createUser = async (username, weight) => {
-  console.log('name', username, 'weight', weight);
+const getUsers = async (limit = 100, offset = 0) => {
   return new Promise(async (resolve, reject) => {
+    console.log('Getting all users.');
     try {
-      let existingUser = await findUser(username);
-      if (existingUser) {
-        reject('user exists');
-      }
-      const newUser = await models.Users.create({
-        name: username,
-        weight: Number(weight) || 0,
+      const users = await models.Users.findAll({
+        limit: Number(limit),
+        offset: Number(offset),
       });
-      resolve(newUser);
+      resolve(users);
     } catch (err) {
       console.error(err);
       reject(err);
@@ -53,14 +49,35 @@ const createUser = async (username, weight) => {
   });
 };
 
-const updateUser = async (username, newUsername, newWeight) => {
+const createUser = async (newUser) => {
+  const { username, weight } = newUser;
+  console.log('username', username, 'weight', weight);
   return new Promise(async (resolve, reject) => {
     try {
-      const { id } = await findUser(username);
-      const changeUser = await models.Users.update(
+      let existingUser = await findUser(username);
+      if (existingUser) {
+        reject('Username exists');
+      }
+      const createdUser = await models.Users.create({
+        name: username,
+        weight: Number(weight) || 0,
+      });
+      resolve(createdUser);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const updateUser = async (updatedUser) => {
+  const { id, username, weight } = updatedUser;
+  return new Promise(async (resolve, reject) => {
+    try {
+      const changedUser = await models.Users.update(
         {
-          name: newUsername,
-          weight: newWeight,
+          name: username,
+          weight: weight,
         },
         {
           where: {
@@ -68,7 +85,7 @@ const updateUser = async (username, newUsername, newWeight) => {
           },
         }
       );
-      const updatedUser = await findUser(newUsername || username);
+      const updatedUser = await findUser(username);
       resolve(updatedUser);
     } catch (err) {
       console.error(err);
@@ -220,23 +237,22 @@ const addMesocycle = async (username, date, phaseId, userId) => {
   });
 };
 
-const updateMesocycle = async (mesocycleId, newDate, newPhaseId, newUserId) => {
+const updateMesocycle = async (newMesocycle) => {
+  const { id, date, phase_id, user_id } = newMesocycle;
   return new Promise(async (resolve, reject) => {
     try {
       const mesocycle = await models.Mesocycle.update(
         {
-          date: newDate, //if newDate isn't in the correct format, it still runs but won't update that field
-          phase_id: newPhaseId,
-          user_id: newUserId,
+          date: date, //if newDate isn't in the correct format, it still runs but won't update that field
+          phase_id: Number(phase_id),
+          user_id: Number(user_id),
         },
         {
           where: {
-            id: Number(mesocycleId),
+            id: Number(id),
           },
         }
       );
-      // const updatedPhase = await findPhase(id);
-      // console.log(updatedPhase);
       resolve(mesocycle);
     } catch (err) {
       console.error(err);
@@ -280,7 +296,7 @@ const getMicrocycles = async (username, limit = 100, offset = 0) => {
   });
 };
 const addMicrocycle = async (username, newMicrocycle) => {
-  let { date, deload, mesocycleId, phaseId, userId } = newMicrocycle;
+  let { date, deload, mesocycle_id, phase_id, user_id } = newMicrocycle;
   console.log('trying to add a microcycle');
   // console.log(newMicrocycle);
   // console.log(username);
@@ -297,9 +313,9 @@ const addMicrocycle = async (username, newMicrocycle) => {
       const microcycle = await models.Microcycle.create({
         date: date,
         deload: deload,
-        mesocycle_id: mesocycleId,
-        phase_id: phaseId,
-        user_id: userId,
+        mesocycle_id: mesocycle_id,
+        phase_id: phase_id,
+        user_id: user_id,
       });
       resolve(microcycle);
     } catch (err) {
@@ -312,14 +328,15 @@ const addMicrocycle = async (username, newMicrocycle) => {
 const updateMicrocycle = async (newMicrocycle) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { id, date, deload, mesocycleId, phaseId, userId } = newMicrocycle;
+      const { id, date, deload, mesocycle_id, phase_id, user_id } =
+        newMicrocycle;
       const microcycle = await models.Microcycle.update(
         {
           date: date, //if newDate isn't in the correct format, it still runs but won't update that field
           deload: deload,
-          mesocycle_id: Number(mesocycleId),
-          phase_id: Number(phaseId),
-          user_id: Number(userId),
+          mesocycle_id: Number(mesocycle_id),
+          phase_id: Number(phase_id),
+          user_id: Number(user_id),
         },
         {
           where: {
@@ -387,6 +404,7 @@ const getSessions = async (username, limit = 100, offset = 0) => {
 
 module.exports = {
   findUser,
+  getUsers,
   createUser,
   updateUser,
   findPhase,

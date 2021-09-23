@@ -45,23 +45,23 @@ router
       res.status(409).send(err);
     }
   })
-  .put('/:username/:mesocycleId', async (req: Request, res: Response) => {
+  .put('/:username', async (req: Request, res: Response) => {
     //TODO refactor to accept only full object
-    const { mesocycleId } = req.params;
-    const { newDate, newPhaseId, newUserId } = req.body;
-    if (!(newDate || newPhaseId || newUserId)) {
-      res.status(400).send('No changes requested.');
+    const { newMesocycle } = req.body;
+    const { id, date, phase_id, user_id } = newMesocycle;
+    if (
+      id === undefined ||
+      date === undefined ||
+      phase_id === undefined ||
+      user_id === undefined
+    ) {
+      res.status(400).send('Incomplete newMesocycle object received.');
       return;
     }
-    console.log('updating mesocycle with id', mesocycleId);
+    console.log('updating mesocycle with id', id);
     try {
-      const data = await updateMesocycle(
-        mesocycleId,
-        newDate,
-        newPhaseId,
-        newUserId
-      );
-      const updatedPhase = await findMesocycle(mesocycleId);
+      const data = await updateMesocycle(newMesocycle);
+      const updatedPhase = await findMesocycle(id);
       res.status(200).send(updatedPhase);
     } catch (err) {
       res.status(304).send(err);

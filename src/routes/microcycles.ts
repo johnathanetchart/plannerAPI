@@ -52,17 +52,17 @@ router
     //TODO refactor to accept only full object
     const { updatedMicrocycle } = req.body;
     console.log(updatedMicrocycle);
-    const { id, date, deload, mesocycleId, phaseId, userId } =
+    const { id, date, deload, mesocycle_id, phase_id, user_id } =
       updatedMicrocycle;
     if (
       id === undefined ||
       date === undefined ||
       deload === undefined ||
-      mesocycleId === undefined ||
-      phaseId === undefined ||
-      userId === undefined
+      mesocycle_id === undefined ||
+      phase_id === undefined ||
+      user_id === undefined
     ) {
-      res.status(400).send('Incomplete microcycle object received.');
+      res.status(400).send('Incomplete newMicrocycle object received.');
       return;
     }
     console.log('updating microcycle with id', id);

@@ -34,7 +34,7 @@ router
     //TODO refactor to accept full object only
     const { phaseId } = req.params;
     const { newPhase, newName, newDate } = req.body;
-    if (!(newName || newDate)) {
+    if (newName === undefined || newDate === undefined) {
       //check that newPhase object has all required details
       res.status(400).send('No changes requested.');
       return;
