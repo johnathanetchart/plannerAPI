@@ -80,8 +80,8 @@ microcycle_id,
 user_id, //optional, but queries one less //// TODO MAKE OPTIONAL
 }
 
-    returns in the form of:
-      //TODO
+returns in the form:
+//TODO
 
 ### /phases
 
@@ -94,46 +94,73 @@ limit, //default value 100
 offset //default value 0
 }
 
-    returns in the form of:
-      [
-          {
-              id,
-              date,
-              user_id,
-              name
-          },
-          ...
-      ]
+returns in the form:
+[
+{
+id,
+date,
+user_id,
+name
+},
+...
+]
+
+GET
+/phases
+Returns all phases for all users.
+optional query parameters are:
+{
+limit, //default value 100
+offset //default value 0
+}
+
+Returns in the form:
+[
+{
+id,
+date,
+user_id,
+name
+},
+...
+]
 
 POST
 /phases/:username
-creates a new phase for username
-optional body parameters are:
+Creates a new phase for username.
+Body parameter with newPhase in the form:
 {
-date, //defaults to current time
+newPhase: {
+date, //OPTIONAL - defaults to current time
+name, //REQUIRED
+}
 }
 
-    returns in the form of:
-      {
-        id, //phase's id
-        date,
-        user_id,
-        name
-      }
+returns in the form:
+{
+id, //phase's id
+date,
+user_id,
+name,
+}
 
 PUT
-/phases/:phaseId
-updates the phase row in the database for the supplied phase id with req.body in the form:
+/phases
+Updates the phases table row in the database for the supplied phase with req.body in the form:
 {
-newName, //OPTIONAL - new name
-newDate //OPTIONAL - new date //will count as success with no change if improper format
+updatedPhase: {
+id,
+date,
+user_id,
+name,
 }
-if newName or newDate are not present in body, it will return "No changed requested."
-returns updated phase on success
+}
+returns updated phase on success in the form:
 {
 id,
+date,
+user_id,
 name,
-date
 }
 
 ### /mesocycles

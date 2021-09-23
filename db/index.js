@@ -111,26 +111,42 @@ const findPhase = async (id) => {
 };
 
 const getPhases = async (username, limit = 100, offset = 0) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let { id } = await findUser(username);
-      const phases = await models.Phase.findAll({
-        where: {
-          user_id: id,
-        },
-        limit: Number(limit),
-        offset: Number(offset),
-      });
-      resolve(phases);
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
+  if (username !== undefined) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let { id } = await findUser(username);
+        const phases = await models.Phase.findAll({
+          where: {
+            user_id: id,
+          },
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(phases);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  } else {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let phases = await models.Phase.findAll({
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(phases);
+      } catch {
+        console.error(err);
+        reject(err);
+      }
+    });
+  }
 };
-const addPhase = async (username, name = 'unnamed', date) => {
+const addPhase = async (username, newPhase) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let { name, date } = newPhase;
       let { id } = await findUser(username);
       if (date === undefined) {
         date = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -148,14 +164,15 @@ const addPhase = async (username, name = 'unnamed', date) => {
   });
 };
 
-const updatePhase = async (id, newName, newDate) => {
+const updatePhase = async (updatedPhase) => {
+  const { id, date, user_id, name } = updatedPhase;
   return new Promise(async (resolve, reject) => {
     try {
-      // const { name, date } = phaseUpdates;
       const phase = await models.Phase.update(
         {
-          name: newName,
-          date: newDate, //if newDate isn't in the correct format, it still runs but won't update that field
+          date: date, //if newDate isn't in the correct format, it still runs but won't update that field
+          user_id: user_id,
+          name: name,
         },
         {
           where: {
@@ -163,8 +180,6 @@ const updatePhase = async (id, newName, newDate) => {
           },
         }
       );
-      // const updatedPhase = await findPhase(id);
-      // console.log(updatedPhase);
       resolve(phase);
     } catch (err) {
       console.error(err);

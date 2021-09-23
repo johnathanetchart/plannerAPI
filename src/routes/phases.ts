@@ -11,39 +11,59 @@ const router = express.Router();
 
 router
   .get('/:username', async (req: Request, res: Response) => {
-    console.log('getting all sessions for', req.params.username);
+    console.log('In phases GET route for user', req.params.username);
     try {
+      const { username } = req.params;
       const { limit, offset } = req.query;
-      let data = await getPhases(req.params.username, limit, offset);
+      let data = await getPhases(username, limit, offset);
+      res.status(200).send(data);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  })
+  .get('/', async (req: Request, res: Response) => {
+    console.log('In phases GET route for getting all phases.');
+    const { limit, offset } = req.query;
+    try {
+      let data = await getPhases(limit, offset);
       res.status(200).send(data);
     } catch (err) {
       res.status(500).send(err);
     }
   })
   .post('/:username', async (req: Request, res: Response) => {
-    console.log('adding a new phase for', req.params.username, req.body);
+    console.log('In phases POST route.');
     try {
-      const { name, date } = req.body;
-      let data = await addPhase(req.params.username, name, date);
+      const { username } = req.params;
+      const { newPhase } = req.body;
+      const { name, date } = newPhase;
+      if (name === undefined) {
+        res.status(400).send('newPhase object incomplete.');
+        return;
+      }
+      let data = await addPhase(username, newPhase);
       res.status(201).send(data);
     } catch (err) {
       res.status(400).send(err);
     }
   })
-  .put('/:phaseId', async (req: Request, res: Response) => {
-    //TODO refactor to accept full object only
-    const { phaseId } = req.params;
-    const { newPhase, newName, newDate } = req.body;
-    if (newName === undefined || newDate === undefined) {
-      //check that newPhase object has all required details
-      res.status(400).send('No changes requested.');
-      return;
-    }
-    console.log('updating phase with id', phaseId);
+  .put('/', async (req: Request, res: Response) => {
+    console.log('In phases PUT route.');
     try {
-      const data = await updatePhase(phaseId, newName, newDate);
-      const updatedPhase = await findPhase(phaseId);
-      res.status(200).send(updatedPhase);
+      const { updatedPhase } = req.body;
+      const { id, date, user_id, name } = updatedPhase;
+      if (
+        id === undefined ||
+        name === undefined ||
+        user_id === undefined ||
+        date === undefined
+      ) {
+        res.status(400).send('Incomplete newPhase object received.');
+        return;
+      }
+      const data = await updatePhase(updatedPhase);
+      const newPhase = await findPhase(id);
+      res.status(200).send(newPhase);
     } catch (err) {
       res.status(304).send(err);
     }
