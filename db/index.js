@@ -205,44 +205,55 @@ const findMesocycle = async (id) => {
 };
 
 const getMesocycles = async (username, limit = 100, offset = 0) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let { id } = await findUser(username);
-      const mesocycles = await models.Mesocycle.findAll({
-        where: {
-          user_id: id,
-        },
-        limit: Number(limit),
-        offset: Number(offset),
-      });
-      resolve(mesocycles);
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
+  if (username !== undefined) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let { id } = await findUser(username);
+        const mesocycles = await models.Mesocycle.findAll({
+          where: {
+            user_id: id,
+          },
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(mesocycles);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  } else {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const mesocycles = await models.Mesocycle.findAll({
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(mesocycles);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  }
 };
 
-const addMesocycle = async (username, date, phaseId, userId) => {
+const addMesocycle = async (username, newMesocycle) => {
+  let { date, phase_id, user_id } = newMesocycle;
   return new Promise(async (resolve, reject) => {
     try {
-      if (userId === undefined) {
+      if (user_id === undefined) {
         let { id } = await findUser(username);
-        userId = id;
+        user_id = id;
       }
       if (date === undefined) {
         date = new Date().toISOString().slice(0, 19).replace('T', ' ');
       }
 
-      console.log(username);
-      console.log(date);
-      console.log(phaseId);
-      console.log(userId);
-
       const mesocycle = await models.Mesocycle.create({
         date: date,
-        phase_id: phaseId,
-        user_id: userId,
+        phase_id: phase_id,
+        user_id: user_id,
       });
       resolve(mesocycle);
     } catch (err) {
@@ -252,8 +263,8 @@ const addMesocycle = async (username, date, phaseId, userId) => {
   });
 };
 
-const updateMesocycle = async (newMesocycle) => {
-  const { id, date, phase_id, user_id } = newMesocycle;
+const updateMesocycle = async (updatedMesocycle) => {
+  const { id, date, phase_id, user_id } = updatedMesocycle;
   return new Promise(async (resolve, reject) => {
     try {
       const mesocycle = await models.Mesocycle.update(

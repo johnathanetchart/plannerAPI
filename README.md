@@ -86,8 +86,8 @@ returns in the form:
 ### /phases
 
 GET
-/phases/:username
-Returns all phases associated with username.
+/phases/:username || /phases
+Returns all phases associated with username or, if no username is present in req.params, returns a list of all phases.
 optional query parameters are:
 {
 limit, //default value 100
@@ -95,26 +95,6 @@ offset //default value 0
 }
 
 returns in the form:
-[
-{
-id,
-date,
-user_id,
-name
-},
-...
-]
-
-GET
-/phases
-Returns all phases for all users.
-optional query parameters are:
-{
-limit, //default value 100
-offset //default value 0
-}
-
-Returns in the form:
 [
 {
 id,
@@ -167,7 +147,7 @@ name,
 
 GET
 /mesocycles/:username/:mesocycleId
-Retrieves the specific mesocycle information for a designated mesocycleId
+Returns the mesocycle for a designated mesocycleId.
 returns mesocycle:
 {
 id,
@@ -177,9 +157,9 @@ user_id,
 }
 
 GET
-/mesocycles/:username
-Retrieves a list of mesocycles for the designated user.
-optional parameters are:
+/mesocycles/:username || /mesocycles
+Returns a list of mesocycles for the designated user or, if no username is present in req.params, returns a list of all mesocycles.
+Optional parameters are:
 {
 limit, //default value 100
 offset //default value 0
@@ -201,9 +181,11 @@ POST
 Creates a new mesocycle entry for the user.
 Parameters include:
 {
+newMesocycle: {
 date, //optional: defaults to current time
 phaseId, //REQUIRED
-userId, //optional but reduces database queries
+userId, //OPTIONAL - but reduces database queries if included
+}
 }
 
 Returns the created mesocycle:
@@ -215,15 +197,18 @@ user_id,
 }
 
 PUT
-/mesocycles/:username/:mesocycleId
+/mesocycles
 Updates the mesocycle table row in the database for the supplied mesocycle id with req.body in the form:
 {
-newDate, //OPTIONAL - new date //will count as success with no change if improper format
-newPhaseId,
-newUserId,
+updatedMesocycle: {
+id,
+date,
+phase_id,
+user_id,
 }
-if newDate, newPhaseId, and newUserId are not present in body, it will return "No changed requested."
-returns updated mesocycle on success:
+}
+
+Returns updated mesocycle in form:
 {
 id,
 date,
@@ -235,7 +220,7 @@ user_id,
 
 GET
 /microcycles/:username/:mesocycleId
-Retrieves the specific microcycle information for a designated microcycleId
+Returns the specific microcycle information for a designated microcycleId
 returns microcycle:
 {
 id,
@@ -248,7 +233,7 @@ user_id,
 
 GET
 /microcycles/:username
-Retrieves a list of microcycles for the designated user.
+Returns a list of microcycles for the designated user.
 optional parameters are:
 {
 limit, //default value 100
