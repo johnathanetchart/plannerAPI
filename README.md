@@ -12,23 +12,43 @@ It utilizes a MYSQL database.
 
 GET
 /users:username
-returns user in the form:
+Returns user object attributed to username in the form:
 {
 id,
 name,
 weight
 }
 
-POST
-/users:username
-NOT IMPLEMENTED
-will create a new user
-send in body:
+GET
+/users
+returns all users in the form:
+[
 {
-"name": String
-"weight": Number // will default to 0 if not supplied
+id,
+name,
+weight
+},
+...
+]
+
+POST
+/users/:username
+Creates a new user.
+Body must be in the form:
+{
+name,
+weight, // will default to 0 if not supplied
 }
-returns new user object including new id
+Returns new user object in the form:
+{
+id,
+name,
+weight
+}
+
+PUT
+/users
+Updates the user with supplied updatedUser object in the form of:
 {
 id,
 name,
@@ -39,7 +59,7 @@ weight
 
 GET
 /sessions/:username
-returns sessions of username
+Returns all sessions attributed to username.
 optional query parameters are:
 {
 limit, //default value 100
@@ -67,8 +87,8 @@ user_id, //optional, but queries one less //// TODO MAKE OPTIONAL
 
 GET
 /phases/:username
-returns phases of username
-optional parameters are:
+Returns all phases associated with username.
+optional query parameters are:
 {
 limit, //default value 100
 offset //default value 0

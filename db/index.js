@@ -71,12 +71,12 @@ const createUser = async (newUser) => {
 };
 
 const updateUser = async (updatedUser) => {
-  const { id, username, weight } = updatedUser;
+  const { id, name, weight } = updatedUser;
   return new Promise(async (resolve, reject) => {
     try {
       const changedUser = await models.Users.update(
         {
-          name: username,
+          name: name,
           weight: weight,
         },
         {
@@ -85,7 +85,7 @@ const updateUser = async (updatedUser) => {
           },
         }
       );
-      const updatedUser = await findUser(username);
+      const updatedUser = await findUser(name);
       resolve(updatedUser);
     } catch (err) {
       console.error(err);

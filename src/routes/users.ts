@@ -10,9 +10,10 @@ const {
 const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
-  console.log('Getting all users.');
+  console.log('In users root GET route.');
   try {
-    let data = await getUsers();
+    const { limit, offset } = req.query;
+    const data = await getUsers(limit, offset);
     res.status(200).send(data);
   } catch (err) {
     res.status(500).send(err);
@@ -20,9 +21,10 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.get('/:username', async (req: Request, res: Response) => {
-  console.log('in users GET route');
+  const { username } = req.params;
+  console.log('In users GET route for username', username + '.');
   try {
-    let data = await findUser(req.params.username);
+    const data = await findUser(username);
     res.status(200).send(data);
   } catch (err) {
     res.status(500).send(err);
@@ -30,7 +32,7 @@ router.get('/:username', async (req: Request, res: Response) => {
 });
 
 router.post('/', async (req: Request, res: Response) => {
-  console.log('in users POST route');
+  console.log('In users POST route.');
   const { newUser } = req.body;
   try {
     let data = await createUser(newUser);
@@ -41,15 +43,13 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 router.put('/', async (req: Request, res: Response) => {
-  console.log('in PUT for users');
+  console.log('In PUT for users.');
   const { updatedUser } = req.body;
-  const { id, username, weight } = updatedUser;
-  if (id === undefined || username === undefined || weight === undefined) {
+  const { id, name, weight } = updatedUser;
+  if (id === undefined || name === undefined || weight === undefined) {
     res.status(400).send('Incomplete updatedUser object received.');
     return;
   }
-  console.log(username);
-  console.log(weight);
   try {
     const data = await updateUser(updatedUser);
     res.status(200).send(data);
