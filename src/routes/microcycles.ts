@@ -54,7 +54,14 @@ router
     console.log(updatedMicrocycle);
     const { id, date, deload, mesocycleId, phaseId, userId } =
       updatedMicrocycle;
-    if (!(id || date || deload || mesocycleId || phaseId || userId)) {
+    if (
+      id === undefined ||
+      date === undefined ||
+      deload === undefined ||
+      mesocycleId === undefined ||
+      phaseId === undefined ||
+      userId === undefined
+    ) {
       res.status(400).send('Incomplete microcycle object received.');
       return;
     }
