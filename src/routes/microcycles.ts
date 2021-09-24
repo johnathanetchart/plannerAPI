@@ -55,8 +55,7 @@ router
       res.status(409).send(err);
     }
   })
-  .put('/:username', async (req: Request, res: Response) => {
-    //TODO refactor to accept only full object
+  .put('/', async (req: Request, res: Response) => {
     const { updatedMicrocycle } = req.body;
     console.log(updatedMicrocycle);
     const { id, date, deload, mesocycle_id, phase_id, user_id } =

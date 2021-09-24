@@ -55,34 +55,6 @@ name,
 weight
 }
 
-### /sessions
-
-GET
-/sessions/:username
-Returns all sessions attributed to username.
-optional query parameters are:
-{
-limit, //default value 100
-offset, //default value 0
-}
-
-POST
-/sessions/:username
-NOT IMPLEMENTED
-will create a new session.
-must include in body:
-{
-date, //default to current time if not supplied
-name,
-phase_id,
-mesocycle_id,
-microcycle_id,
-user_id, //optional, but queries one less //// TODO MAKE OPTIONAL
-}
-
-returns in the form:
-//TODO
-
 ### /phases
 
 GET
@@ -278,7 +250,7 @@ user_id,
 }
 
 PUT
-/microcycles/:username
+/microcycles
 Updates the microcycle table row in the database for the supplied microcycle with req.body in the form:
 {
 updatedMicrocycle: {
@@ -303,6 +275,144 @@ user_id,
 
 ### /sessions
 
-//TODO
+GET
+/sessions/:username
+Returns a list of sessions for the designated user or, if no username is present in req.params, returns a list of all sessions.
+Optional query parameters are:
+{
+limit, //default value 100
+offset, //default value 0
+}
+Returns a list of sessions in the form:
+[
+{
+id,
+date,
+name,
+phase_id,
+mesocycle_id,
+microcycle_id,
+user_id
+},
+...
+]
+
+POST
+/sessions/:username
+Creates a new session entry for the user.
+Parameters include:
+{
+newSession:
+{
+date, //default to current time if not supplied
+name,
+phase_id,
+mesocycle_id,
+microcycle_id,
+user_id, //optional, but queries one less
+}
+}
+
+Returns the created session:
+{
+id,
+date,
+name,
+phase_id,
+mesocycle_id,
+microcycle_id,
+user_id,
+}
+
+PUT
+/sessions
+Updates the microcycle table row in the database for the supplied microcycle with req.body in the form:
+{
+updatedSession: {
+id,
+date,
+name,
+phase_id,
+mesocycle_id,
+microcycle_id,
+user_id,
+}
+}
+
+Returns updated session in the form:
+{
+id,
+date,
+name,
+phase_id,
+mesocycle_id,
+microcycle_id,
+user_id,
+}
 
 ### /sets
+
+GET
+/sets/:username
+Returns a list of sets for the designated user or, if no username is present in req.params, returns a list of all sets.
+Optional query parameters are:
+{
+limit, //default value 100
+offset, //default value 0
+}
+Returns a list of sessions in the form:
+[
+{
+id,
+load,
+reps,
+session_id,
+user_id
+},
+...
+]
+
+POST
+/sets/:username
+Creates a new set entry for the user.
+Parameters include:
+{
+newSet:
+{
+load,
+reps,
+session_id,
+user_id, //optional, but queries one less
+}
+}
+
+Returns the created session:
+{
+id,
+load,
+reps,
+session_id,
+user_id,
+}
+
+PUT
+/sets
+Updates the set table row in the database for the supplied set with req.body in the form:
+{
+updatedSet: {
+id,
+load,
+reps,
+session_id,
+user_id,
+}
+}
+
+Returns updated set in the form:
+{
+id,
+load,
+reps,
+session_id,
+user_id,
+}

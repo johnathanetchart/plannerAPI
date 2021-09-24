@@ -440,7 +440,7 @@ const getSessions = async (username, limit = 100, offset = 0) => {
   }
 };
 
-const addSession = (username, newSession) => {
+const addSession = async (username, newSession) => {
   let { date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
     newSession;
   return new Promise(async (resolve, reject) => {
@@ -468,7 +468,7 @@ const addSession = (username, newSession) => {
   });
 };
 
-const updateSession = (updatedSession) => {
+const updateSession = async (updatedSession) => {
   const { id, date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
     updatedSession;
   return new Promise(async (resolve, reject) => {
@@ -489,6 +489,104 @@ const updateSession = (updatedSession) => {
         }
       );
       resolve(session);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const findSet = (id) => {
+  return new Promise(async (resolve, reject) => {
+    console.log('attempting to find set with id', id);
+    try {
+      const set = await models.Sets.findOne({
+        where: {
+          id: id,
+        },
+      });
+      resolve(set);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const getSets = async (username, limit = 100, offset = 0) => {
+  if (username !== undefined) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let { id } = await findUser(username);
+        const sets = await models.Sets.findAll({
+          where: {
+            user_id: id,
+          },
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(sets);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  } else {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sets = await models.Sets.findAll({
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(sets);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  }
+};
+
+const addSet = (username, newSet) => {
+  let { id, load, reps, session_id, user_id } = newSet;
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (user_id === undefined) {
+        let { id } = await findUser(username);
+        userId = id;
+      }
+      const set = await models.Sets.create({
+        load: Number(load),
+        reps: Number(reps),
+        session_id: Number(session_id),
+        user_id: Number(user_id),
+      });
+      resolve(set);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const updateSet = (updatedSet) => {
+  let { id, load, reps, session_id, user_id } = updatedSet;
+  return new Promise(async (resolve, reject) => {
+    try {
+      const set = await models.Sets.update(
+        {
+          load: Number(load),
+          reps: Number(reps),
+          session_id: Number(session_id),
+          user_id: Number(user_id),
+        },
+        {
+          where: {
+            id: Number(id),
+          },
+        }
+      );
+      resolve(set);
     } catch (err) {
       console.error(err);
       reject(err);
@@ -545,4 +643,8 @@ module.exports = {
   getSessions,
   addSession,
   updateSession,
+  findSet,
+  getSets,
+  addSet,
+  updateSet,
 };
