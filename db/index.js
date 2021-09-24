@@ -340,7 +340,7 @@ const addMicrocycle = async (username, newMicrocycle) => {
   let { date, deload, mesocycle_id, phase_id, user_id } = newMicrocycle;
   return new Promise(async (resolve, reject) => {
     try {
-      if (userId === undefined) {
+      if (user_id === undefined) {
         let { id } = await findUser(username);
         userId = id;
       }
@@ -389,6 +389,22 @@ const updateMicrocycle = async (newMicrocycle) => {
   });
 };
 
+const findSession = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const session = await models.Sessions.findOne({
+        where: {
+          id: id,
+        },
+      });
+      resolve(session);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
 const getSessions = async (username, limit = 100, offset = 0) => {
   if (username !== undefined) {
     return new Promise(async (resolve, reject) => {
@@ -422,6 +438,62 @@ const getSessions = async (username, limit = 100, offset = 0) => {
       }
     });
   }
+};
+
+const addSession = (username, newSession) => {
+  let { date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
+    newSession;
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (user_id === undefined) {
+        let { id } = await findUser(username);
+        userId = id;
+      }
+      if (date === undefined) {
+        date = getDate();
+      }
+      const session = await models.Sessions.create({
+        date: date,
+        name: name,
+        phase_id: phase_id,
+        mesocycle_id: mesocycle_id,
+        microcycle_id,
+        user_id: user_id,
+      });
+      resolve(session);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const updateSession = (updatedSession) => {
+  const { id, date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
+    updatedSession;
+  return new Promise(async (resolve, reject) => {
+    try {
+      const session = await models.Sessions.update(
+        {
+          date: date, //if newDate isn't in the correct format, it still runs but won't update that field
+          name: name,
+          phase_id: Number(phase_id),
+          mesocycle_id: Number(mesocycle_id),
+          microcycle_id: Number(microcycle_id),
+          user_id: Number(user_id),
+        },
+        {
+          where: {
+            id: Number(id),
+          },
+        }
+      );
+      resolve(session);
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
 };
 
 // let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format
@@ -469,5 +541,8 @@ module.exports = {
   getMicrocycles,
   addMicrocycle,
   updateMicrocycle,
+  findSession,
   getSessions,
+  addSession,
+  updateSession,
 };

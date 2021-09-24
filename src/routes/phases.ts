@@ -38,7 +38,7 @@ router
       const { newPhase } = req.body;
       const { name, date } = newPhase;
       if (name === undefined) {
-        res.status(400).send('newPhase object incomplete.');
+        res.status(400).send('Incomplete newPhase object received.');
         return;
       }
       let data = await addPhase(username, newPhase);
@@ -58,7 +58,7 @@ router
         user_id === undefined ||
         date === undefined
       ) {
-        res.status(400).send('Incomplete newPhase object received.');
+        res.status(400).send('Incomplete updatedPhase object received.');
         return;
       }
       const data = await updatePhase(updatedPhase);

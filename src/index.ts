@@ -7,7 +7,7 @@ const sessionRoute = require('./routes/sessions');
 const phaseRoute = require('./routes/phases');
 const mesocycleRoute = require('./routes/mesocycles');
 const microcycleRoute = require('./routes/microcycles');
-// const setRoute = require('./routes/sets');
+const setRoute = require('./routes/sets');
 
 const port = 7000;
 app.use(express.json());
@@ -17,7 +17,7 @@ app.use('/sessions', sessionRoute);
 app.use('/phases', phaseRoute);
 app.use('/mesocycles', mesocycleRoute);
 app.use('/microcycles', microcycleRoute);
-// app.use('/sets', setRoute);
+app.use('/sets', setRoute);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello omahhhh');
