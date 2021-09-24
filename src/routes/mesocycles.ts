@@ -21,6 +21,7 @@ router
         res.status(200).send(data);
       }
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -32,6 +33,7 @@ router
       const data = await getMesocycles(username, limit, offset);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -42,6 +44,7 @@ router
       const data = await getMesocycles(limit, offset);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -54,6 +57,7 @@ router
       const data = await addMesocycle(username, newMesocycle);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(409).send(err);
     }
   })
@@ -78,6 +82,7 @@ router
       const newMesocycle = await findMesocycle(id);
       res.status(200).send(newMesocycle);
     } catch (err) {
+      console.error(err);
       res.status(304).send(err);
     }
   });

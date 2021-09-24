@@ -26,7 +26,6 @@ const findUser = async (username) => {
       });
       resolve(user);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -42,7 +41,6 @@ const getUsers = async (limit = 100, offset = 0) => {
       });
       resolve(users);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -63,7 +61,6 @@ const createUser = async (newUser) => {
       });
       resolve(createdUser);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -87,7 +84,6 @@ const updateUser = async (updatedUser) => {
       const updatedUser = await findUser(name);
       resolve(updatedUser);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -103,7 +99,6 @@ const findPhase = async (id) => {
       });
       resolve(phase);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -123,7 +118,6 @@ const getPhases = async (username, limit = 100, offset = 0) => {
         });
         resolve(phases);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -136,7 +130,6 @@ const getPhases = async (username, limit = 100, offset = 0) => {
         });
         resolve(phases);
       } catch {
-        console.error(err);
         reject(err);
       }
     });
@@ -157,7 +150,6 @@ const addPhase = async (username, newPhase) => {
       });
       resolve(phase);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -181,7 +173,6 @@ const updatePhase = async (updatedPhase) => {
       );
       resolve(phase);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -197,7 +188,6 @@ const findMesocycle = async (id) => {
       });
       resolve(mesocycle);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -217,7 +207,6 @@ const getMesocycles = async (username, limit = 100, offset = 0) => {
         });
         resolve(mesocycles);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -230,7 +219,6 @@ const getMesocycles = async (username, limit = 100, offset = 0) => {
         });
         resolve(mesocycles);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -256,7 +244,6 @@ const addMesocycle = async (username, newMesocycle) => {
       });
       resolve(mesocycle);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -280,7 +267,6 @@ const updateMesocycle = async (updatedMesocycle) => {
       );
       resolve(mesocycle);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -296,7 +282,6 @@ const findMicrocycle = async (id) => {
       });
       resolve(microcycle);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -316,7 +301,6 @@ const getMicrocycles = async (username, limit = 100, offset = 0) => {
         });
         resolve(microcycles);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -329,7 +313,6 @@ const getMicrocycles = async (username, limit = 100, offset = 0) => {
         });
         resolve(microcycles);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -356,7 +339,6 @@ const addMicrocycle = async (username, newMicrocycle) => {
       });
       resolve(microcycle);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -383,7 +365,6 @@ const updateMicrocycle = async (newMicrocycle) => {
       );
       resolve(microcycle);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -399,7 +380,6 @@ const findSession = async (id) => {
       });
       resolve(session);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -420,7 +400,6 @@ const getSessions = async (username, limit = 100, offset = 0) => {
 
         resolve(sessions);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -433,7 +412,6 @@ const getSessions = async (username, limit = 100, offset = 0) => {
         });
         resolve(sessions);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -462,7 +440,6 @@ const addSession = async (username, newSession) => {
       });
       resolve(session);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -490,7 +467,6 @@ const updateSession = async (updatedSession) => {
       );
       resolve(session);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -507,7 +483,6 @@ const findSet = (id) => {
       });
       resolve(set);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -527,7 +502,6 @@ const getSets = async (username, limit = 100, offset = 0) => {
         });
         resolve(sets);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -540,7 +514,6 @@ const getSets = async (username, limit = 100, offset = 0) => {
         });
         resolve(sets);
       } catch (err) {
-        console.error(err);
         reject(err);
       }
     });
@@ -563,7 +536,6 @@ const addSet = (username, newSet) => {
       });
       resolve(set);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });
@@ -588,7 +560,6 @@ const updateSet = (updatedSet) => {
       );
       resolve(set);
     } catch (err) {
-      console.error(err);
       reject(err);
     }
   });

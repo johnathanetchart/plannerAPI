@@ -17,6 +17,7 @@ router
       const data = await getUsers(limit, offset);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -27,6 +28,7 @@ router
       const data = await findUser(username);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -37,6 +39,7 @@ router
       let data = await createUser(newUser);
       res.status(201).send(data);
     } catch (err) {
+      console.error(err);
       res.status(409).send(err);
     }
   })
@@ -52,6 +55,7 @@ router
       const data = await updateUser(updatedUser);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(400).send(err);
     }
   });

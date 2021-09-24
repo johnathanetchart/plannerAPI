@@ -18,6 +18,7 @@ router
       let data = await getSessions(username, limit, offset);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -28,17 +29,10 @@ router
       let data = await getSessions(limit, offset);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
-  /*
-  `date` DATETIME NOT NULL,
-	`name` varchar(255) NOT NULL,
-	`phase_id` int NOT NULL,
-	`mesocycle_id` int NOT NULL,
-	`microcycle_id` int NOT NULL,
-	`user_id` int NOT NULL,
-  */
   .post('/:username', async (req: Request, res: Response) => {
     console.log('In sessions POST route for', req.params.username + '.');
     const { username } = req.params;
@@ -58,6 +52,7 @@ router
       let data = await addSession(username, newSession);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -83,6 +78,7 @@ router
       const newSession = await findSession(id);
       res.status(200).send(newSession);
     } catch (err) {
+      console.error(err);
       res.status(304).send(err);
     }
   });

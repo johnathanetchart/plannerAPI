@@ -20,6 +20,7 @@ router
         res.status(200).send(data);
       }
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -31,6 +32,7 @@ router
       const data = await getMicrocycles(username, limit, offset);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -41,6 +43,7 @@ router
       const data = await getMicrocycles(limit, offset);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err);
     }
   })
@@ -52,6 +55,7 @@ router
       const data = await addMicrocycle(username, newMicrocycle);
       res.status(200).send(data);
     } catch (err) {
+      console.error(err);
       res.status(409).send(err);
     }
   })
@@ -80,6 +84,7 @@ router
       const newMicrocycle = await findMicrocycle(id);
       res.status(200).send(newMicrocycle);
     } catch (err) {
+      console.error(err);
       res.status(304).send(err);
     }
   });
