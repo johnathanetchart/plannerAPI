@@ -1,4 +1,3 @@
-// const { resolve } = require('path/posix');
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('workoutplanner', 'root', 'banana', {
   host: 'localhost',
@@ -6,14 +5,15 @@ const sequelize = new Sequelize('workoutplanner', 'root', 'banana', {
 });
 var initModels = require('../models/init-models');
 var models = initModels(sequelize);
-// console.log(models);
-
-// models.User.findAll({ where: { username: "tony" }}).then(...);
 
 const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+
+const getDate = () => {
+  return new Date().toISOString().slice(0, 19).replace('T', ' ');
+};
 
 const findUser = async (username) => {
   return new Promise(async (resolve, reject) => {
@@ -148,7 +148,7 @@ const addPhase = async (username, newPhase) => {
       let { name, date } = newPhase;
       let { id } = await findUser(username);
       if (date === undefined) {
-        date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        date = getDate();
       }
       const phase = await models.Phase.create({
         date: date,
@@ -246,7 +246,7 @@ const addMesocycle = async (username, newMesocycle) => {
         user_id = id;
       }
       if (date === undefined) {
-        date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        date = getDate();
       }
 
       const mesocycle = await models.Mesocycle.create({
@@ -345,7 +345,7 @@ const addMicrocycle = async (username, newMicrocycle) => {
         userId = id;
       }
       if (date === undefined) {
-        date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        date = getDate();
       }
       const microcycle = await models.Microcycle.create({
         date: date,
@@ -390,23 +390,38 @@ const updateMicrocycle = async (newMicrocycle) => {
 };
 
 const getSessions = async (username, limit = 100, offset = 0) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let { id } = await findUser(username);
-      const sessions = await models.Sessions.findAll({
-        where: {
-          user_id: id,
-        },
-        limit: Number(limit),
-        offset: Number(offset),
-      });
+  if (username !== undefined) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let { id } = await findUser(username);
+        const sessions = await models.Sessions.findAll({
+          where: {
+            user_id: id,
+          },
+          limit: Number(limit),
+          offset: Number(offset),
+        });
 
-      resolve(sessions);
-    } catch (err) {
-      console.error(err);
-      reject(err);
-    }
-  });
+        resolve(sessions);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  } else {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sessions = await models.Sessions.findAll({
+          limit: Number(limit),
+          offset: Number(offset),
+        });
+        resolve(sessions);
+      } catch (err) {
+        console.error(err);
+        reject(err);
+      }
+    });
+  }
 };
 
 // let date = new Date().toISOString().slice(0, 19).replace('T', ' '); // date format

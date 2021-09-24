@@ -3,15 +3,24 @@ import { Request, Response } from 'express';
 const { getSessions } = require('../../db/index.js');
 
 const router = express.Router();
-// router.use(express.json());
 
 router
   .get('/:username', async (req: Request, res: Response) => {
-    console.log('getting all sessions for', req.params.username);
+    const { username } = req.params;
+    const { limit, offset } = req.query;
+    console.log('In sessions GET route for user', username + '.');
     try {
-      const { limit, offset } = req.query;
-      // console.log(req.query);
-      let data = await getSessions(req.params.username, limit, offset);
+      let data = await getSessions(username, limit, offset);
+      res.status(200).send(data);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  })
+  .get('/', async (req: Request, res: Response) => {
+    const { limit, offset } = req.query;
+    console.log('In sessions GET route for all sessions.');
+    try {
+      let data = await getSessions(limit, offset);
       res.status(200).send(data);
     } catch (err) {
       res.status(500).send(err);

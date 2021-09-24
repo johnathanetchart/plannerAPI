@@ -291,7 +291,7 @@ user_id
 }
 }
 
-returns updated microcycle in the form:
+Returns updated microcycle in the form:
 {
 id,
 date,
