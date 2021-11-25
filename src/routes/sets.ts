@@ -32,14 +32,14 @@ router
   .post('/:username', async (req: Request, res: Response) => {
     console.log('In sets POST route for', req.params.username + '.');
     const { username } = req.params;
-    const { newSet } = req.body;
-    const { load, reps, session_id, user_id } = newSet;
+    const { set } = req.body;
+    const { load, reps, session_id, user_id } = set;
     if (load === undefined || reps === undefined || session_id === undefined) {
-      res.status(400).send('Incomplete newSet object received.');
+      res.status(400).send('Incomplete set object received.');
       return;
     }
     try {
-      let data = await addSet(username, newSet);
+      let data = await addSet(username, set);
       res.status(200).send(data);
     } catch (err) {
       console.error(err);
@@ -49,8 +49,8 @@ router
   .put('/', async (req: Request, res: Response) => {
     console.log('In sets PUT route.');
     try {
-      const { updatedSet } = req.body;
-      const { id, load, reps, session_id, user_id } = updatedSet;
+      const { set } = req.body;
+      const { id, load, reps, session_id, user_id } = set;
       if (
         id === undefined ||
         load === undefined ||
@@ -58,12 +58,12 @@ router
         session_id === undefined ||
         user_id === undefined
       ) {
-        res.status(400).send('Incomplete updatedSet object received.');
+        res.status(400).send('Incomplete set object received.');
         return;
       }
-      const data = await updateSet(updatedSet);
-      const newSet = await findSet(id);
-      res.status(200).send(newSet);
+      await updateSet(set);
+      const updatedSet = await findSet(id);
+      res.status(200).send(updatedSet);
     } catch (err) {
       console.error(err);
       res.status(304).send(err);

@@ -16,10 +16,13 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.3.0",
     "sequelize": "^6.6.5",
+    "ts-node": "^10.2.1",
     "typescript": "^4.3.5"
   },
   "devDependencies": {
     "@types/node": "^16.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
     "sequelize-auto": "^0.8.4"
