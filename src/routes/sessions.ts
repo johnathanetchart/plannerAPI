@@ -5,6 +5,7 @@ const {
   getSessions,
   addSession,
   updateSession,
+  getSetsForSession,
 } = require('../../db/index.js');
 
 const router = express.Router();
@@ -16,6 +17,16 @@ router
     console.log('In sessions GET route for user', username + '.');
     try {
       let data = await getSessions(username, limit, offset);
+      res.status(200).send(data);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err);
+    }
+  })
+  .get('/:id/sets', async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      let data = await getSetsForSession(id);
       res.status(200).send(data);
     } catch (err) {
       console.error(err);
@@ -36,20 +47,20 @@ router
   .post('/:username', async (req: Request, res: Response) => {
     console.log('In sessions POST route for', req.params.username + '.');
     const { username } = req.params;
-    const { newSession } = req.body;
+    const { session } = req.body;
     const { date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
-      newSession;
+      session;
     if (
       name === undefined ||
       phase_id === undefined ||
       mesocycle_id === undefined ||
       microcycle_id === undefined
     ) {
-      res.status(400).send('Incomplete newSession object received.');
+      res.status(400).send('Incomplete session object received.');
       return;
     }
     try {
-      let data = await addSession(username, newSession);
+      let data = await addSession(username, session);
       res.status(200).send(data);
     } catch (err) {
       console.error(err);
@@ -59,9 +70,9 @@ router
   .put('/', async (req: Request, res: Response) => {
     console.log('In sessions PUT route.');
     try {
-      const { updatedSession } = req.body;
+      const { session } = req.body;
       const { id, date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
-        updatedSession;
+        session;
       if (
         id === undefined ||
         date === undefined ||
@@ -71,12 +82,12 @@ router
         microcycle_id === undefined ||
         user_id === undefined
       ) {
-        res.status(400).send('Incomplete updatedSession object received.');
+        res.status(400).send('Incomplete session object received.');
         return;
       }
-      const data = await updateSession(updatedSession);
-      const newSession = await findSession(id);
-      res.status(200).send(newSession);
+      await updateSession(session);
+      const updatedSession = await findSession(id);
+      res.status(200).send(updatedSession);
     } catch (err) {
       console.error(err);
       res.status(304).send(err);

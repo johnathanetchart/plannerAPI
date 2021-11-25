@@ -1,15 +1,16 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('workoutplanner', 'root', 'banana', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+const sequelize = new Sequelize(
+  process.env.MYSQL_DB,
+  process.env.MYSQL_USER,
+  process.env.MYSQL_PASSWORD,
+  {
+    host: process.env.MYSQL_HOST,
+    dialect: 'mysql',
+  }
+);
 var initModels = require('../models/init-models');
+const Sessions = require('../models/Sessions');
 var models = initModels(sequelize);
-
-const db = {};
-
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
 
 const getDate = () => {
   return new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -47,16 +48,16 @@ const getUsers = async (limit = 100, offset = 0) => {
 };
 
 const createUser = async (newUser) => {
-  const { username, weight } = newUser;
-  console.log('username', username, 'weight', weight);
+  const { name, weight } = newUser;
+  console.log('username', name, 'weight', weight);
   return new Promise(async (resolve, reject) => {
     try {
-      let existingUser = await findUser(username);
+      let existingUser = await findUser(name);
       if (existingUser) {
         reject('Username exists');
       }
       const createdUser = await models.Users.create({
-        name: username,
+        name,
         weight: Number(weight) || 0,
       });
       resolve(createdUser);
@@ -93,9 +94,22 @@ const findPhase = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const phase = models.Phase.findOne({
-        where: {
-          id: Number(id),
+        where: { id: Number(id) },
+        include: {
+          model: models.Mesocycle,
+          as: 'mesocycles',
+          include: { model: models.Microcycle, as: 'microcycles' },
         },
+        order: [
+          ['date', 'DESC'],
+          [{ model: models.Mesocycle, as: 'mesocycles' }, 'date', 'DESC'],
+          [
+            { model: models.Mesocycle, as: 'mesocycles' },
+            { model: models.Microcycle, as: 'microcycles' },
+            'date',
+            'DESC',
+          ],
+        ],
       });
       resolve(phase);
     } catch (err) {
@@ -115,6 +129,7 @@ const getPhases = async (username, limit = 100, offset = 0) => {
           },
           limit: Number(limit),
           offset: Number(offset),
+          order: [['date', 'DESC']],
         });
         resolve(phases);
       } catch (err) {
@@ -202,6 +217,11 @@ const getMesocycles = async (username, limit = 100, offset = 0) => {
           where: {
             user_id: id,
           },
+          order: [
+            ['date', 'DESC'],
+            [{ model: models.Microcycle, as: 'microcycles' }, 'date', 'DESC'],
+          ],
+          include: { model: models.Microcycle, as: 'microcycles' },
           limit: Number(limit),
           offset: Number(offset),
         });
@@ -296,6 +316,7 @@ const getMicrocycles = async (username, limit = 100, offset = 0) => {
           where: {
             user_id: id,
           },
+          include: { model: models.Sessions, as: 'sessions' },
           limit: Number(limit),
           offset: Number(offset),
         });
@@ -325,14 +346,14 @@ const addMicrocycle = async (username, newMicrocycle) => {
     try {
       if (user_id === undefined) {
         let { id } = await findUser(username);
-        userId = id;
+        user_id = id;
       }
       if (date === undefined) {
         date = getDate();
       }
       const microcycle = await models.Microcycle.create({
         date: date,
-        deload: deload,
+        deload: !!deload,
         mesocycle_id: mesocycle_id,
         phase_id: phase_id,
         user_id: user_id,
@@ -418,6 +439,20 @@ const getSessions = async (username, limit = 100, offset = 0) => {
   }
 };
 
+const getSessionsForMicrocycle = async (id) => {
+  try {
+    const data = await models.Sessions.findAll({
+      where: {
+        microcycle_id: id,
+      },
+      include: { model: models.Sets, as: 'sets' },
+    });
+    return data;
+  } catch (err) {
+    return err;
+  }
+};
+
 const addSession = async (username, newSession) => {
   let { date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
     newSession;
@@ -425,7 +460,7 @@ const addSession = async (username, newSession) => {
     try {
       if (user_id === undefined) {
         let { id } = await findUser(username);
-        userId = id;
+        user_id = id;
       }
       if (date === undefined) {
         date = getDate();
@@ -520,13 +555,24 @@ const getSets = async (username, limit = 100, offset = 0) => {
   }
 };
 
+const getSetsForSession = async (id) => {
+  try {
+    const sets = await models.Sets.findAll({
+      where: { session_id: id },
+    });
+    return sets;
+  } catch (err) {
+    return err;
+  }
+};
+
 const addSet = (username, newSet) => {
   let { id, load, reps, session_id, user_id } = newSet;
   return new Promise(async (resolve, reject) => {
     try {
       if (user_id === undefined) {
         let { id } = await findUser(username);
-        userId = id;
+        user_id = id;
       }
       const set = await models.Sets.create({
         load: Number(load),
@@ -612,10 +658,12 @@ module.exports = {
   updateMicrocycle,
   findSession,
   getSessions,
+  getSessionsForMicrocycle,
   addSession,
   updateSession,
   findSet,
   getSets,
+  getSetsForSession,
   addSet,
   updateSet,
 };

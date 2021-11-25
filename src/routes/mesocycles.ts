@@ -50,11 +50,11 @@ router
   })
   .post('/:username', async (req: Request, res: Response) => {
     const { username } = req.params;
-    const { newMesocycle } = req.body;
-    const { date, phase_id, user_id } = newMesocycle;
+    const { mesocycle } = req.body;
+    const { date, phase_id, user_id } = mesocycle;
     console.log('In mesocycles POST route for user', username + '.');
     try {
-      const data = await addMesocycle(username, newMesocycle);
+      const data = await addMesocycle(username, mesocycle);
       res.status(200).send(data);
     } catch (err) {
       console.error(err);
@@ -62,15 +62,15 @@ router
     }
   })
   .put('/', async (req: Request, res: Response) => {
-    const { updatedMesocycle } = req.body;
-    const { id, date, phase_id, user_id } = updatedMesocycle;
+    const { mesocycle } = req.body;
+    const { id, date, phase_id, user_id } = mesocycle;
     if (
       id === undefined ||
       date === undefined ||
       phase_id === undefined ||
       user_id === undefined
     ) {
-      res.status(400).send('Incomplete newMesocycle object received.');
+      res.status(400).send('Incomplete mesocycle object received.');
       return;
     }
     console.log(
@@ -78,9 +78,9 @@ router
       id + '.'
     );
     try {
-      const data = await updateMesocycle(updatedMesocycle);
-      const newMesocycle = await findMesocycle(id);
-      res.status(200).send(newMesocycle);
+      await updateMesocycle(mesocycle);
+      const updatedMesocycle = await findMesocycle(id);
+      res.status(200).send(updatedMesocycle);
     } catch (err) {
       console.error(err);
       res.status(304).send(err);

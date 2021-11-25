@@ -1,4 +1,7 @@
+require('dotenv').config();
+
 const express = require('express');
+const cors = require('cors');
 import { Request, Response } from 'express';
 const app = express();
 
@@ -9,8 +12,9 @@ const mesocycleRoute = require('./routes/mesocycles');
 const microcycleRoute = require('./routes/microcycles');
 const setRoute = require('./routes/sets');
 
-const port = 7000;
+const port = process.env.SERVER_PORT;
 app.use(express.json());
+app.use(cors());
 
 app.use('/users', userRoute);
 app.use('/sessions', sessionRoute);

@@ -21,6 +21,8 @@
   },
   "devDependencies": {
     "@types/node": "^16.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
     "sequelize-auto": "^0.8.4"

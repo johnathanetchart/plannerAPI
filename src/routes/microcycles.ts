@@ -5,31 +5,28 @@ const {
   getMicrocycles,
   addMicrocycle,
   updateMicrocycle,
+  getSessionsForMicrocycle,
 } = require('../../db/index.js');
 
 const router = express.Router();
 
 router
-  .get('/:username/:microcycleId', async (req: Request, res: Response) => {
-    console.log('in microcycle GET route');
-    try {
-      const data = await findMicrocycle(req.params.microcycleId);
-      if (data === null) {
-        res.status(404).send('No entry found.');
-      } else {
-        res.status(200).send(data);
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send(err);
-    }
-  })
   .get('/:username', async (req: Request, res: Response) => {
     console.log('in microcycles GET route');
     try {
       const { username } = req.params;
       const { limit, offset } = req.query;
       const data = await getMicrocycles(username, limit, offset);
+      res.status(200).send(data);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err);
+    }
+  })
+  .get('/:id/sessions', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const data = await getSessionsForMicrocycle(id);
       res.status(200).send(data);
     } catch (err) {
       console.error(err);
@@ -51,8 +48,8 @@ router
     console.log('In microcycles POST route.');
     try {
       const { username } = req.params;
-      let { newMicrocycle } = req.body;
-      const data = await addMicrocycle(username, newMicrocycle);
+      const { microcycle } = req.body;
+      const data = await addMicrocycle(username, microcycle);
       res.status(200).send(data);
     } catch (err) {
       console.error(err);
@@ -60,10 +57,10 @@ router
     }
   })
   .put('/', async (req: Request, res: Response) => {
-    const { updatedMicrocycle } = req.body;
-    console.log(updatedMicrocycle);
+    const { microcycle } = req.body;
+    console.log(microcycle);
     const { id, date, deload, mesocycle_id, phase_id, user_id } =
-      updatedMicrocycle;
+      microcycle;
     if (
       id === undefined ||
       date === undefined ||
@@ -80,9 +77,9 @@ router
       id + '.'
     );
     try {
-      const data = await updateMicrocycle(updatedMicrocycle);
-      const newMicrocycle = await findMicrocycle(id);
-      res.status(200).send(newMicrocycle);
+      await updateMicrocycle(microcycle);
+      const updatedMicrocycle = await findMicrocycle(id);
+      res.status(200).send(updatedMicrocycle);
     } catch (err) {
       console.error(err);
       res.status(304).send(err);

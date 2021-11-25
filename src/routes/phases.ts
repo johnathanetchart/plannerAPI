@@ -22,6 +22,17 @@ router
       res.status(500).send(err);
     }
   })
+  .get('/:username/:id', async (req: Request, res: Response) => {
+    console.log('In phases GET route for user', req.params.username);
+    try {
+      const { username, id } = req.params;
+      let data = await findPhase(id);
+      res.status(200).send(data);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err);
+    }
+  })
   .get('/', async (req: Request, res: Response) => {
     console.log('In phases GET route for getting all phases.');
     const { limit, offset } = req.query;
@@ -37,13 +48,13 @@ router
     console.log('In phases POST route.');
     try {
       const { username } = req.params;
-      const { newPhase } = req.body;
-      const { name, date } = newPhase;
+      const { phase } = req.body;
+      const { name, date } = phase;
       if (name === undefined) {
-        res.status(400).send('Incomplete newPhase object received.');
+        res.status(400).send('Incomplete phase object received.');
         return;
       }
-      let data = await addPhase(username, newPhase);
+      let data = await addPhase(username, phase);
       res.status(201).send(data);
     } catch (err) {
       console.error(err);
@@ -53,20 +64,20 @@ router
   .put('/', async (req: Request, res: Response) => {
     console.log('In phases PUT route.');
     try {
-      const { updatedPhase } = req.body;
-      const { id, date, user_id, name } = updatedPhase;
+      const { phase } = req.body;
+      const { id, date, user_id, name } = phase;
       if (
         id === undefined ||
         name === undefined ||
         user_id === undefined ||
         date === undefined
       ) {
-        res.status(400).send('Incomplete updatedPhase object received.');
+        res.status(400).send('Incomplete phase object received.');
         return;
       }
-      const data = await updatePhase(updatedPhase);
-      const newPhase = await findPhase(id);
-      res.status(200).send(newPhase);
+      await updatePhase(phase);
+      const updatedPhase = await findPhase(id);
+      res.status(200).send(updatedPhase);
     } catch (err) {
       console.error(err);
       res.status(304).send(err);
