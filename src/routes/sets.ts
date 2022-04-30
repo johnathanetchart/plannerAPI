@@ -46,24 +46,24 @@ router
       res.status(500).send(err);
     }
   })
-  .put('/', async (req: Request, res: Response) => {
+  .put('/:id', async (req: Request, res: Response) => {
     console.log('In sets PUT route.');
     try {
       const { set } = req.body;
-      const { id, load, reps, session_id, user_id } = set;
-      if (
-        id === undefined ||
-        load === undefined ||
-        reps === undefined ||
-        session_id === undefined ||
-        user_id === undefined
-      ) {
-        res.status(400).send('Incomplete set object received.');
-        return;
+      const { id } = req.params;
+      const { load, reps } = set;
+
+      if (!load && !reps) {
+        res.status(400).send('You must provide load and/or reps.');
       }
-      await updateSet(set);
-      const updatedSet = await findSet(id);
-      res.status(200).send(updatedSet);
+
+      const setToUpdate = await findSet(id);
+      if (!setToUpdate) {
+        res.status(404).send('This Set does not exist.');
+      }
+
+      setToUpdate.update(set);
+      res.status(200).send(setToUpdate);
     } catch (err) {
       console.error(err);
       res.status(304).send(err);

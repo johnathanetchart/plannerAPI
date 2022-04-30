@@ -67,27 +67,27 @@ router
       res.status(500).send(err);
     }
   })
-  .put('/', async (req: Request, res: Response) => {
+  .put('/:id', async (req: Request, res: Response) => {
     console.log('In sessions PUT route.');
     try {
+      const { id } = req.params;
       const { session } = req.body;
-      const { id, date, name, phase_id, mesocycle_id, microcycle_id, user_id } =
-        session;
-      if (
-        id === undefined ||
-        date === undefined ||
-        name === undefined ||
-        phase_id === undefined ||
-        mesocycle_id === undefined ||
-        microcycle_id === undefined ||
-        user_id === undefined
-      ) {
-        res.status(400).send('Incomplete session object received.');
-        return;
+      const { date, name } = session;
+
+      if (!date && !name) {
+        res
+          .status(400)
+          .send('You must provide either the date or name to update.');
       }
-      await updateSession(session);
-      const updatedSession = await findSession(id);
-      res.status(200).send(updatedSession);
+
+      const sessionToUpdate = await findSession(id);
+      if (!sessionToUpdate) {
+        res.status(400).send('Session does not exist.');
+      }
+
+      sessionToUpdate.update(session);
+
+      res.status(200).send(sessionToUpdate);
     } catch (err) {
       console.error(err);
       res.status(304).send(err);

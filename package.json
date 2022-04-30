@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon src/index.ts",
+    "build:prod": "./scripts/buildProd.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Johnathan Etchart",
