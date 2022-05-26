@@ -2,6 +2,13 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+
+const Sequelize = require('sequelize');
+import { ApolloServer } from 'apollo-server';
+const typeDefs = require('./gql/schema');
+const resolvers = require('./gql/resolvers');
+const { models } = require('../db');
+
 import { Request, Response } from 'express';
 const app = express();
 
@@ -26,6 +33,16 @@ app.use('/sets', setRoute);
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello omahhhh');
 });
+
+const gqlServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: { models },
+});
+
+gqlServer
+  .listen()
+  .then(({ url }) => console.log(`GraphQL Server is running on ${url}`));
 
 app.listen(port, () => {
   console.log(`plannerAPI listening at http://localhost:${port}`);

@@ -9,8 +9,7 @@ const sequelize = new Sequelize(
   }
 );
 var initModels = require('../models/init-models');
-const Sessions = require('../models/Sessions');
-var models = initModels(sequelize);
+const models = initModels(sequelize);
 
 const getDate = () => {
   return new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -640,6 +639,7 @@ const updateSet = (updatedSet) => {
 // })
 
 module.exports = {
+  models,
   findUser,
   getUsers,
   createUser,
