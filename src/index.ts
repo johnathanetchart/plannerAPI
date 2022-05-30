@@ -1,16 +1,13 @@
 require('dotenv').config();
 
 const express = require('express');
+const app = express();
 const cors = require('cors');
 
-const Sequelize = require('sequelize');
-import { ApolloServer } from 'apollo-server';
-const typeDefs = require('./gql/schema');
-const resolvers = require('./gql/resolvers');
+const { graphqlHTTP } = require('express-graphql');
+const { GraphQLSchema } = require('graphql');
+const { generateSchema } = require('graphcraft')({});
 const { models } = require('../db');
-
-import { Request, Response } from 'express';
-const app = express();
 
 const userRoute = require('./routes/users');
 const sessionRoute = require('./routes/sessions');
@@ -19,7 +16,6 @@ const mesocycleRoute = require('./routes/mesocycles');
 const microcycleRoute = require('./routes/microcycles');
 const setRoute = require('./routes/sets');
 
-const port = process.env.SERVER_PORT;
 app.use(express.json());
 app.use(cors());
 
@@ -30,20 +26,17 @@ app.use('/mesocycles', mesocycleRoute);
 app.use('/microcycles', microcycleRoute);
 app.use('/sets', setRoute);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello omahhhh');
+app.use('/graphql', async (req, res) => {
+  const schema = await generateSchema(models, req);
+
+  return graphqlHTTP({
+    schema: new GraphQLSchema(schema),
+    graphiql: true,
+  })(req, res);
 });
 
-const gqlServer = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: { models },
-});
-
-gqlServer
-  .listen()
-  .then(({ url }) => console.log(`GraphQL Server is running on ${url}`));
-
-app.listen(port, () => {
-  console.log(`plannerAPI listening at http://localhost:${port}`);
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(
+    `plannerAPI listening at http://localhost:${process.env.SERVER_PORT}`
+  );
 });

@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 var DataTypes = require('sequelize').DataTypes;
 var _Mesocycle = require('./Mesocycle');
 var _Microcycle = require('./Microcycle');
@@ -35,7 +36,7 @@ function initModels(sequelize) {
   Sessions.belongsTo(Mesocycle, { as: 'mesocycle', foreignKey: 'mesocycle_id' });
   Sessions.belongsTo(Phase, { as: 'phase', foreignKey: 'phase_id' });
   Sessions.belongsTo(Users, { as: 'user', foreignKey: 'user_id' });
-  
+
   Sets.belongsTo(Sessions, { as: 'session', foreignKey: 'session_id' });
 
   return {
@@ -45,6 +46,8 @@ function initModels(sequelize) {
     Sessions,
     Sets,
     Users,
+    Sequelize,
+    sequelize
   };
 }
 module.exports = initModels;
