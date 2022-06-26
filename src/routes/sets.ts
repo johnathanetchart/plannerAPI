@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 import { Request, Response } from 'express';
-const { findSet, getSets, addSet, updateSet } = require('../../db/index.js');
+import { findSet, getSets, addSet, updateSet } from '../../db/index.js';
 
 const router = express.Router();
 
@@ -70,4 +70,4 @@ router
     }
   });
 
-module.exports = router;
+export default router;

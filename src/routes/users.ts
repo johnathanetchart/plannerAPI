@@ -1,11 +1,6 @@
-const express = require('express');
+import express from 'express';
 import { Request, Response } from 'express';
-const {
-  findUser,
-  getUsers,
-  createUser,
-  updateUser,
-} = require('../../db/index.js');
+import { findUser, getUsers, createUser, updateUser } from '../../db/index.js';
 
 const router = express.Router();
 
@@ -27,7 +22,7 @@ router
     try {
       const data = await findUser(username);
       if (!data) {
-        res.status(404).send(`User: ${username} was not found.`)
+        res.status(404).send(`User: ${username} was not found.`);
       }
       res.status(200).send(data);
     } catch (err) {
@@ -63,4 +58,4 @@ router
     }
   });
 
-module.exports = router;
+export default router;

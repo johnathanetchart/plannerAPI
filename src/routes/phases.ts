@@ -1,11 +1,6 @@
-const express = require('express');
+import express from 'express';
 import { Request, Response } from 'express';
-const {
-  findPhase,
-  getPhases,
-  addPhase,
-  updatePhase,
-} = require('../../db/index.js');
+import { findPhase, getPhases, addPhase, updatePhase } from '../../db/index.js';
 
 const router = express.Router();
 
@@ -84,4 +79,4 @@ router
     }
   });
 
-module.exports = router;
+export default router;

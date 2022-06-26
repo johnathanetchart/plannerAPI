@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 import { Request, Response } from 'express';
-const {
+import {
   findMesocycle,
   getMesocycles,
   addMesocycle,
   updateMesocycle,
-} = require('../../db/index.js');
+} from '../../db/index.js';
 
 const router = express.Router();
 
@@ -87,4 +87,4 @@ router
     }
   });
 
-module.exports = router;
+export default router;

@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 import { Request, Response } from 'express';
-const {
+import {
   findMicrocycle,
   getMicrocycles,
   addMicrocycle,
   updateMicrocycle,
   getSessionsForMicrocycle,
-} = require('../../db/index.js');
+} from '../../db/index.js';
 
 const router = express.Router();
 
@@ -59,8 +59,7 @@ router
   .put('/', async (req: Request, res: Response) => {
     const { microcycle } = req.body;
     console.log(microcycle);
-    const { id, date, deload, mesocycle_id, phase_id, user_id } =
-      microcycle;
+    const { id, date, deload, mesocycle_id, phase_id, user_id } = microcycle;
     if (
       id === undefined ||
       date === undefined ||
@@ -86,4 +85,4 @@ router
     }
   });
 
-module.exports = router;
+export default router;

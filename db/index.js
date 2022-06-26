@@ -1,15 +1,29 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(
-  process.env.MYSQL_DB,
-  process.env.MYSQL_USER,
-  process.env.MYSQL_PASSWORD,
-  {
-    host: process.env.MYSQL_HOST,
-    dialect: 'mysql',
-  }
-);
+const mysql2 = require('mysql2'); // Needed to fix sequelize issues with WebPack
+
+let sequelize;
+try {
+  sequelize = new Sequelize(
+    process.env.MYSQL_DB,
+    process.env.MYSQL_USER,
+    process.env.MYSQL_PASSWORD,
+    {
+      host: process.env.MYSQL_HOST,
+      dialect: 'mysql',
+      dialectModule: mysql2, // Needed to fix sequelize issues with WebPack
+      port: process.env.MYSQL_PORT,
+    }
+  );
+} catch (error) {
+  console.log(error);
+}
 var initModels = require('../models/init-models');
-const models = initModels(sequelize);
+let models;
+try {
+  models = initModels(sequelize);
+} catch (error) {
+  console.log(error);
+}
 
 const getDate = () => {
   return new Date().toISOString().slice(0, 19).replace('T', ' ');

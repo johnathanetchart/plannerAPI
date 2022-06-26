@@ -1,20 +1,21 @@
 require('dotenv').config();
 
-const express = require('express');
+import express from 'express';
 const app = express();
-const cors = require('cors');
+import cors from 'cors';
+import serverlessExpress from '@vendia/serverless-express';
 
-const { graphqlHTTP } = require('express-graphql');
-const { GraphQLSchema } = require('graphql');
+import { graphqlHTTP } from 'express-graphql';
+import { GraphQLSchema } from 'graphql';
 const { generateSchema } = require('graphcraft')({});
-const { models } = require('../db');
+import { models } from '../db';
 
-const userRoute = require('./routes/users');
-const sessionRoute = require('./routes/sessions');
-const phaseRoute = require('./routes/phases');
-const mesocycleRoute = require('./routes/mesocycles');
-const microcycleRoute = require('./routes/microcycles');
-const setRoute = require('./routes/sets');
+import userRoute from './routes/users';
+import sessionRoute from './routes/sessions';
+import phaseRoute from './routes/phases';
+import mesocycleRoute from './routes/mesocycles';
+import microcycleRoute from './routes/microcycles';
+import setRoute from './routes/sets';
 
 app.use(express.json());
 app.use(cors());
@@ -35,8 +36,23 @@ app.use('/graphql', async (req, res) => {
   })(req, res);
 });
 
-app.listen(process.env.SERVER_PORT, () => {
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(process.env.SERVER_PORT, async () => {
   console.log(
     `plannerAPI listening at http://localhost:${process.env.SERVER_PORT}`
   );
 });
+
+export const getHandler = serverlessExpress({ app });
+export async function handler(event, context, callback) {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('[info]', 'Event', JSON.stringify(event));
+  }
+
+  return getHandler(event, context, () => {
+    console.log('getHandler');
+  });
+}

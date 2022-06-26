@@ -1,4 +1,4 @@
-const db = require('../../db');
+import db from '../../db';
 
 const resolvers = {
   Query: {
@@ -16,4 +16,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+export default resolvers;
