@@ -6,6 +6,7 @@ import {
   addSession,
   updateSession,
   getSetsForSession,
+  getMostFrequentSessions,
 } from '../../db/index.js';
 
 const router = express.Router();
@@ -23,6 +24,19 @@ router
       res.status(500).send(err);
     }
   })
+  .get('/:username/mostFrequent', async (req: Request, res: Response) => {
+    const { username } = req.params;
+    console.log('In sessions GET route for user', username + '.');
+    try {
+      let data = await getMostFrequentSessions(username);
+      console.log(data);
+      res.status(200).send(data.map((session) => session.name));
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err);
+    }
+  })
+
   .get('/:id/sets', async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
